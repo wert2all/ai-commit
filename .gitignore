@@ -16,3 +16,6 @@
 
 # Go workspace file
 go.work
+
+# Compiled binary
+ai-commit
