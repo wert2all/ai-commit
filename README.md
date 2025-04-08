@@ -11,18 +11,10 @@ A Go application that generates contextual conventional commit messages using AI
    - [Google AI (Gemini)](https://ai.google.dev/)
    - **Local AI (Ollama)**
 2. Git must be installed and the application must be run from within a git repository
-3. Set your API key either in a `.env` file or as an environment variable:
+3. Set your API key as an environment variable:
 
-   Option 1: Using `.env` file (recommended)
-   ```bash
-   # Copy example env file
-   cp .env.example .env
-   
-   # Edit .env file and add your API keys
-   nano .env
-   ```
+   Option 1: Using environment variables
 
-   Option 2: Using environment variables
    ```bash
    # For OpenAI
    export OPENAI_API_KEY='your-api-key-here'
@@ -48,6 +40,7 @@ go mod download
 ## Usage
 
 The application should be run from within a git repository. It will analyze:
+
 - Staged changes (`git diff --cached`)
 - Unstaged changes (`git diff`)
 - Untracked files
@@ -78,6 +71,7 @@ The program will analyze your current git changes and generate an AI-powered com
 `type(scope): description`
 
 For example:
+
 - `feat(auth): implement OAuth2 authentication flow`
 - `fix(api): resolve race condition in database connection pool`
 - `docs(readme): update installation instructions`

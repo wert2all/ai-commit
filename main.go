@@ -10,16 +10,8 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/joho/godotenv"
 	"github.com/wert2all/ai-commit/ai"
 )
-
-func init() {
-	// Load .env file if it exists
-	if err := godotenv.Load(); err != nil {
-		log.Printf("Warning: .env file not found or could not be loaded")
-	}
-}
 
 func main() {
 	providerName := flag.String("provider", "openai", "AI provider to use (openai, claude, mistral, gemini, local)")
