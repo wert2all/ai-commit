@@ -30,61 +30,18 @@ func main() {
 	// Convert relative path to absolute
 	absProjectDir, err := filepath.Abs(*projectDir)
 	if err != nil {
-		log.Fatal("Error resolving project directory path:", err)
+		log.Fatalf("Error resolving project directory path: %v", err)
 	}
 
-	// Get API key based on provider
-	var apiKey string
-
-	switch *providerName {
-	case "openai":
-		apiKey = os.Getenv("OPENAI_API_KEY")
-		if apiKey == "" {
-			log.Fatal("OPENAI_API_KEY environment variable is not set")
-		}
-
-	case "claude":
-		apiKey = os.Getenv("CLAUDE_API_KEY")
-		if apiKey == "" {
-			log.Fatal("CLAUDE_API_KEY environment variable is not set")
-		}
-
-	case "mistral":
-		apiKey = os.Getenv("MISTRAL_API_KEY")
-		if apiKey == "" {
-			log.Fatal("MISTRAL_API_KEY environment variable is not set")
-		}
-
-	case "gemini":
-		apiKey = os.Getenv("GEMINI_API_KEY")
-		if apiKey == "" {
-			log.Fatal("GEMINI_API_KEY environment variable is not set")
-		}
-
-	case "local":
-		// No API key needed for local provider
-	default:
-		log.Fatalf("Unknown provider: %s", *providerName)
-	}
-
-
-	config := ai.Config{
-		Type:   ai.ProviderType(*providerName),
-		APIKey: apiKey,
-		Model:  *model,
-	}
-
-	provider, err := ai.NewProvider(config)
+	provider, err := ai.NewProvider(*providerName, *model)
 	if err != nil {
 		log.Fatal("Error creating AI provider:", err)
 	}
-
 
 	commitMsg, err := generateCommitMessage(provider, absProjectDir)
 	if err != nil {
 		log.Fatal("Error generating commit message:", err)
 	}
-
 
 	fmt.Println("Generated commit message:")
 	fmt.Println(commitMsg)
