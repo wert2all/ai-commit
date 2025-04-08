@@ -2,6 +2,7 @@ package main
 
 import (
 	"bytes"
+	"context"
 	"fmt"
 	"log"
 	"os"
@@ -240,7 +241,7 @@ func getGitChanges() (string, error) {
 
 func generateCommitMessage(client *openai.Client) (string, error) {
 	// Get project context
-	context, err := getProjectContext()
+	projectContext, err := getProjectContext()
 	if err != nil {
 		log.Printf("Warning: error getting project context: %v", err)
 	}
@@ -257,7 +258,7 @@ func generateCommitMessage(client *openai.Client) (string, error) {
 	}
 
 	resp, err := client.CreateChatCompletion(
-		"commit-message-generation",
+		context.Background(),
 		openai.ChatCompletionRequest{
 			Model: openai.GPT3Dot5Turbo,
 			Messages: []openai.ChatCompletionMessage{
@@ -273,7 +274,7 @@ func generateCommitMessage(client *openai.Client) (string, error) {
 				},
 				{
 					Role: openai.ChatMessageRoleUser,
-					Content: fmt.Sprintf("Project Context:\n\n%s\n\nChanges:\n\n%s", context, changes),
+					Content: fmt.Sprintf("Project Context:\n\n%s\n\nChanges:\n\n%s", projectContext, changes),
 				},
 			},
 			Temperature: 0.7,
