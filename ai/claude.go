@@ -6,6 +6,8 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+
+	"github.com/wert2all/ai-commit/changes"
 )
 
 type ClaudeProvider struct {
@@ -27,20 +29,10 @@ type claudeResponse struct {
 	Model      string `json:"model"`
 }
 
-func NewClaudeProvider(apiKey string, model string) *ClaudeProvider {
-	if model == "" {
-		model = "claude-2" // default model
-	}
-	return &ClaudeProvider{
-		apiKey: apiKey,
-		model:  model,
-	}
-}
-
-func (p *ClaudeProvider) GenerateCommitMessage(projectContext, changes string) (string, error) {
+func (p *ClaudeProvider) GenerateCommitMessage(projectContext string, changes changes.Changes) (string, error) {
 	req := claudeRequest{
 		Model:       p.model,
-		Prompt:      fmt.Sprintf("\n\nHuman: Project Context:\n\n%s\n\nChanges:\n\n%s\n\nAssistant: %s", projectContext, changes, SystemPrompt),
+		Prompt:      fmt.Sprintf("\n\nHuman: Project Context:\n\n%s\n\nChanges:\n\n%s\n\nAssistant: %s", projectContext, changes.ToString(), SystemPrompt),
 		MaxTokens:   50,
 		Temperature: 0.7,
 		Stop:        []string{"\n", "Human:"},
@@ -77,4 +69,14 @@ func (p *ClaudeProvider) GenerateCommitMessage(projectContext, changes string) (
 	}
 
 	return result.Completion, nil
+}
+
+func NewClaudeProvider(apiKey string, model string) *ClaudeProvider {
+	if model == "" {
+		model = "claude-2" // default model
+	}
+	return &ClaudeProvider{
+		apiKey: apiKey,
+		model:  model,
+	}
 }

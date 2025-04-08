@@ -1,6 +1,10 @@
 package ai
 
-import "fmt"
+import (
+	"fmt"
+
+	"github.com/wert2all/ai-commit/changes"
+)
 
 // SystemPrompt is the standard prompt for all AI providers
 const SystemPrompt = `You are a commit message generator. Generate a concise and descriptive commit message 
@@ -13,7 +17,7 @@ Return only the commit message, nothing else.`
 
 // Provider defines the interface for AI providers
 type Provider interface {
-	GenerateCommitMessage(projectContext, changes string) (string, error)
+	GenerateCommitMessage(projectContext string, changes changes.Changes) (string, error)
 }
 
 // GenerateCommitMessagePrompt creates a standardized prompt for commit message generation

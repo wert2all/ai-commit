@@ -6,6 +6,8 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+
+	"github.com/wert2all/ai-commit/changes"
 )
 
 type GeminiProvider struct {
@@ -51,13 +53,13 @@ func NewGeminiProvider(apiKey string, model string) *GeminiProvider {
 	}
 }
 
-func (p *GeminiProvider) GenerateCommitMessage(projectContext, changes string) (string, error) {
+func (p *GeminiProvider) GenerateCommitMessage(projectContext string, changes changes.Changes) (string, error) {
 	req := geminiRequest{
 		Contents: []content{
 			{
 				Parts: []part{
 					{Text: SystemPrompt},
-					{Text: fmt.Sprintf("Project Context:\n\n%s\n\nChanges:\n\n%s", projectContext, changes)},
+					{Text: fmt.Sprintf("Project Context:\n\n%s\n\nChanges:\n\n%s", projectContext, changes.ToString())},
 				},
 			},
 		},

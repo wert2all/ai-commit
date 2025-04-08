@@ -7,6 +7,8 @@ import (
 	"io"
 	"net/http"
 	"strings"
+
+	"github.com/wert2all/ai-commit/changes"
 )
 
 type LocalProvider struct {
@@ -31,9 +33,10 @@ func NewLocalProvider(options map[string]interface{}) (*LocalProvider, error) {
 	}, nil
 }
 
-func (p *LocalProvider) GenerateCommitMessage(projectContext, changes string) (string, error) {
+func (p *LocalProvider) GenerateCommitMessage(projectContext string, changes changes.Changes) (string, error) {
+	panic("not implemented")
 	// Prepare the prompt using GenerateCommitMessagePrompt
-	prompt := GenerateCommitMessagePrompt(projectContext, changes)
+	prompt := GenerateCommitMessagePrompt(projectContext, changes.ToString())
 
 	// Prepare request body
 	requestBody, err := json.Marshal(map[string]interface{}{

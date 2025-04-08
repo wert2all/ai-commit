@@ -6,6 +6,9 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+
+	"github.com/gookit/goutil/dump"
+	"github.com/wert2all/ai-commit/changes"
 )
 
 type MistralProvider struct {
@@ -14,10 +17,10 @@ type MistralProvider struct {
 }
 
 type mistralRequest struct {
-	Model       string   `json:"model"`
+	Model       string    `json:"model"`
 	Messages    []message `json:"messages"`
-	Temperature float64  `json:"temperature"`
-	MaxTokens   int      `json:"max_tokens"`
+	Temperature float64   `json:"temperature"`
+	MaxTokens   int       `json:"max_tokens"`
 }
 
 type message struct {
@@ -43,22 +46,24 @@ func NewMistralProvider(apiKey string, model string) *MistralProvider {
 	}
 }
 
-func (p *MistralProvider) GenerateCommitMessage(projectContext, changes string) (string, error) {
+func (p *MistralProvider) GenerateCommitMessage(projectContext string, changes changes.Changes) (string, error) {
 	req := mistralRequest{
 		Model: p.model,
 		Messages: []message{
 			{
-				Role: "system",
+				Role:    "system",
 				Content: SystemPrompt,
 			},
 			{
 				Role:    "user",
-				Content: fmt.Sprintf("Project Context:\n\n%s\n\nChanges:\n\n%s", projectContext, changes),
+				Content: fmt.Sprintf("Project Context:\n\n%s\n\nChanges:\n\n%s", projectContext, changes.ToString()),
 			},
-		},
+	 	},
 		Temperature: 0.7,
 		MaxTokens:   50,
 	}
+	
+	dump.P(req)
 
 	reqBody, err := json.Marshal(req)
 	if err != nil {

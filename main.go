@@ -10,8 +10,14 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/gookit/goutil/dump"
 	"github.com/wert2all/ai-commit/ai"
+	"github.com/wert2all/ai-commit/changes"
 )
+
+func D(vs ...any) {
+	dump.P(vs)
+}
 
 func main() {
 	providerName := flag.String("provider", "openai", "AI provider to use (openai, claude, mistral, gemini, local)")
@@ -210,40 +216,6 @@ func getProjectContext(projectDir string) (string, error) {
 	return context.String(), nil
 }
 
-func getGitChanges() (string, error) {
-	// Get staged changes
-	stagedCmd := exec.Command("git", "diff", "--cached", "--diff-algorithm=minimal")
-	stagedOut, err := stagedCmd.Output()
-	if err != nil {
-		return "", fmt.Errorf("error getting staged changes: %v", err)
-	}
-
-	// Get unstaged changes
-	unstagedCmd := exec.Command("git", "diff", "--diff-algorithm=minimal")
-	unstagedOut, err := unstagedCmd.Output()
-	if err != nil {
-		return "", fmt.Errorf("error getting unstaged changes: %v", err)
-	}
-
-	// Get untracked files
-	untrackedCmd := exec.Command("git", "ls-files", "--others", "--exclude-standard")
-	untrackedOut, err := untrackedCmd.Output()
-	if err != nil {
-		return "", fmt.Errorf("error getting untracked files: %v", err)
-	}
-
-	// Combine all changes
-	var changes bytes.Buffer
-	changes.WriteString("=== Staged Changes ===\n")
-	changes.Write(stagedOut)
-	changes.WriteString("\n=== Unstaged Changes ===\n")
-	changes.Write(unstagedOut)
-	changes.WriteString("\n=== Untracked Files ===\n")
-	changes.Write(untrackedOut)
-
-	return changes.String(), nil
-}
-
 func generateCommitMessage(provider ai.Provider, projectDir string) (string, error) {
 	// Get project context
 	projectContext, err := getProjectContext(projectDir)
@@ -252,14 +224,9 @@ func generateCommitMessage(provider ai.Provider, projectDir string) (string, err
 	}
 
 	// Get git changes
-	changes, err := getGitChanges()
+	changes, err := changes.NewChanges()
 	if err != nil {
 		return "", fmt.Errorf("error getting git changes: %v", err)
-	}
-
-	// If no changes, return error
-	if strings.TrimSpace(changes) == "" {
-		return "", fmt.Errorf("no changes detected in the repository")
 	}
 
 	return provider.GenerateCommitMessage(projectContext, changes)
