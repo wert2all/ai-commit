@@ -24,7 +24,14 @@ func init() {
 func main() {
 	providerName := flag.String("provider", "openai", "AI provider to use (openai, claude, mistral, gemini, local)")
 	model := flag.String("model", "", "Model to use (e.g., gpt-3.5-turbo, claude-2, mistral-medium, gemini-pro)")
+	projectDir := flag.String("dir", ".", "Project directory path")
 	flag.Parse()
+
+	// Convert relative path to absolute
+	absProjectDir, err := filepath.Abs(*projectDir)
+	if err != nil {
+		log.Fatal("Error resolving project directory path:", err)
+	}
 
 	// Get API key based on provider
 	var apiKey string
@@ -73,7 +80,7 @@ func main() {
 	}
 
 
-	commitMsg, err := generateCommitMessage(provider)
+	commitMsg, err := generateCommitMessage(provider, absProjectDir)
 	if err != nil {
 		log.Fatal("Error generating commit message:", err)
 	}
@@ -180,14 +187,9 @@ func getProjectConfig(repoRoot string, files []string) map[string]string {
 	return config
 }
 
-func getProjectContext() (string, error) {
-	// Get repository root
-	rootCmd := exec.Command("git", "rev-parse", "--show-toplevel")
-	rootOut, err := rootCmd.Output()
-	if err != nil {
-		return "", fmt.Errorf("error getting repository root: %v", err)
-	}
-	repoRoot := strings.TrimSpace(string(rootOut))
+func getProjectContext(projectDir string) (string, error) {
+	// Use provided project directory as repository root
+	repoRoot := projectDir
 
 	// Get project structure using git ls-files
 	filesCmd := exec.Command("git", "ls-files")
@@ -293,9 +295,9 @@ func getGitChanges() (string, error) {
 	return changes.String(), nil
 }
 
-func generateCommitMessage(provider ai.Provider) (string, error) {
+func generateCommitMessage(provider ai.Provider, projectDir string) (string, error) {
 	// Get project context
-	projectContext, err := getProjectContext()
+	projectContext, err := getProjectContext(projectDir)
 	if err != nil {
 		log.Printf("Warning: error getting project context: %v", err)
 	}
