@@ -36,10 +36,17 @@ func main() {
 		log.Fatal("Error creating AI provider:", err)
 	}
 
-	// contextBuilder := project.NewBuilder().
-	// 	AddChanges()
+	// contextBuilder, err := project.NewBuilder(absProjectDir)
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
 	//
-	// D(contextBuilder.Build())
+	// D(
+	// 	contextBuilder.
+	// 		AddLanguages().
+	// 		AddChanges().
+	// 		Build(),
+	// )
 	// panic("s")
 	commitMsg, err := generateCommitMessage(provider, absProjectDir)
 	if err != nil {
