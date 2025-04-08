@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"fmt"
 	"os/exec"
+	"strings"
 )
 
 type (
@@ -25,10 +26,15 @@ func (c changesImpl) ToString() string {
 
 func NewChanges() (Changes, error) {
 	changedCmd := exec.Command("git", "diff", "--cached", "--diff-algorithm=minimal")
-	changedOut, err := changedCmd.Output()
+	changes, err := changedCmd.Output()
 	if err != nil {
 		return nil, fmt.Errorf("error getting staged changes: %v", err)
 	}
 
-	return &changesImpl{changed: changedOut}, nil
+	// If no changes, return error
+	if strings.TrimSpace(string(changes[:])) == "" {
+		return nil, fmt.Errorf("no changes detected in the repository")
+	}
+
+	return &changesImpl{changed: changes}, nil
 }
