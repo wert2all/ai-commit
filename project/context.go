@@ -27,6 +27,8 @@ type (
 	ContextBuilder interface {
 		AddChanges() ContextBuilder
 		AddLanguages() ContextBuilder
+		AddGitBranch() ContextBuilder
+
 		Build() (*ProjectContext, error)
 	}
 	contextBuilderImpl struct {
@@ -34,8 +36,22 @@ type (
 		errors    []error
 		changes   changes.Changes
 		languages []string
+		branch    *string
 	}
 )
+
+// AddGitBranch implements ContextBuilder.
+func (c contextBuilderImpl) AddGitBranch() ContextBuilder {
+	// Get git branch info
+	branchCmd := exec.Command("git", "branch", "--show-current")
+	branchOut, err := branchCmd.Output()
+	if err != nil {
+		c.errors = append(c.errors, err)
+	}
+	branchString := string(branchOut[:])
+	c.branch = &branchString
+	return c
+}
 
 // AddLanguages implements ContextBuilder.
 func (c contextBuilderImpl) AddLanguages() ContextBuilder {
@@ -91,6 +107,11 @@ func (c contextBuilderImpl) Build() (*ProjectContext, error) {
 		}
 	}
 
+	if c.branch != nil {
+		context.WriteString("\n=== Git branch ===\n")
+		context.WriteString(*c.branch)
+	}
+
 	if c.changes != nil {
 		context.WriteString("\n=== Changes ===\n")
 		context.Write(c.changes.Value())
@@ -126,5 +147,6 @@ func NewBuilder(projectDir string) (ContextBuilder, error) {
 		errors:    make([]error, 0),
 		files:     files,
 		languages: make([]string, 0),
+		branch:    nil,
 	}, nil
 }

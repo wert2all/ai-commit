@@ -45,9 +45,11 @@ func main() {
 	// 	contextBuilder.
 	// 		AddLanguages().
 	// 		AddChanges().
+	// 		AddGitBranch().
 	// 		Build(),
 	// )
 	// panic("s")
+
 	commitMsg, err := generateCommitMessage(provider, absProjectDir)
 	if err != nil {
 		log.Fatal("Error generating commit message:", err)
