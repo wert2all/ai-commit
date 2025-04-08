@@ -100,6 +100,11 @@ func (c contextBuilderImpl) Build() (*ProjectContext, error) {
 	}
 	var context bytes.Buffer
 
+	context.WriteString("\n=== Project Structure ===\n")
+	for _, file := range c.files {
+		context.WriteString(file + "\n")
+	}
+
 	if len(c.languages) > 0 {
 		context.WriteString("\n=== Project Languages ===\n")
 		for _, lang := range c.languages {
