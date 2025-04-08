@@ -7,6 +7,7 @@ A Go application that generates contextual conventional commit messages using AI
 1. You need an API key from one of the supported providers:
    - [OpenAI](https://platform.openai.com/)
    - [Anthropic (Claude)](https://www.anthropic.com/)
+   - [Mistral AI](https://mistral.ai/)
 2. Git must be installed and the application must be run from within a git repository
 3. Set your API key as an environment variable:
 
@@ -16,6 +17,9 @@ export OPENAI_API_KEY='your-api-key-here'
 
 # For Claude
 export CLAUDE_API_KEY='your-api-key-here'
+
+# For Mistral
+export MISTRAL_API_KEY='your-api-key-here'
 ```
 
 ## Installation
@@ -42,6 +46,9 @@ go run main.go --provider openai --model gpt-4
 
 # Use Claude
 go run main.go --provider claude --model claude-2
+
+# Use Mistral
+go run main.go --provider mistral --model mistral-medium
 ```
 
 The program will analyze your current git changes and generate an AI-powered commit message following the conventional commit format:
@@ -71,6 +78,7 @@ Then you can run the executable:
 - Supports multiple AI providers:
   - OpenAI (GPT-3.5-turbo, GPT-4)
   - Claude (claude-2, claude-instant-1)
+  - Mistral AI (mistral-medium, mistral-small, mistral-tiny)
 - Analyzes your actual git changes to generate contextual commit messages
 - Considers staged changes, unstaged changes, and untracked files
 - Follows [Conventional Commits](https://www.conventionalcommits.org/) specification

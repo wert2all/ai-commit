@@ -5,8 +5,9 @@ import "fmt"
 type ProviderType string
 
 const (
-	ProviderOpenAI  ProviderType = "openai"
-	ProviderClaude ProviderType = "claude"
+	ProviderOpenAI   ProviderType = "openai"
+	ProviderClaude  ProviderType = "claude"
+	ProviderMistral ProviderType = "mistral"
 )
 
 type Config struct {
@@ -22,6 +23,8 @@ func NewProvider(config Config) (Provider, error) {
 		return NewOpenAIProvider(config.APIKey, config.Model), nil
 	case ProviderClaude:
 		return NewClaudeProvider(config.APIKey, config.Model), nil
+	case ProviderMistral:
+		return NewMistralProvider(config.APIKey, config.Model), nil
 	default:
 		return nil, fmt.Errorf("unknown provider type: %s", config.Type)
 	}

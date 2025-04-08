@@ -14,13 +14,30 @@ import (
 )
 
 func main() {
-	providerName := flag.String("provider", "openai", "AI provider to use (openai)")
-	model := flag.String("model", "", "Model to use (e.g., gpt-3.5-turbo)")
+	providerName := flag.String("provider", "openai", "AI provider to use (openai, claude, mistral)")
+	model := flag.String("model", "", "Model to use (e.g., gpt-3.5-turbo, claude-2, mistral-medium)")
 	flag.Parse()
 
-	apiKey := os.Getenv("OPENAI_API_KEY")
-	if apiKey == "" {
-		log.Fatal("OPENAI_API_KEY environment variable is not set")
+	// Get API key based on provider
+	var apiKey string
+	switch *providerName {
+	case "openai":
+		apiKey = os.Getenv("OPENAI_API_KEY")
+		if apiKey == "" {
+			log.Fatal("OPENAI_API_KEY environment variable is not set")
+		}
+	case "claude":
+		apiKey = os.Getenv("CLAUDE_API_KEY")
+		if apiKey == "" {
+			log.Fatal("CLAUDE_API_KEY environment variable is not set")
+		}
+	case "mistral":
+		apiKey = os.Getenv("MISTRAL_API_KEY")
+		if apiKey == "" {
+			log.Fatal("MISTRAL_API_KEY environment variable is not set")
+		}
+	default:
+		log.Fatalf("Unknown provider: %s", *providerName)
 	}
 
 	config := ai.Config{
