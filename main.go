@@ -24,17 +24,10 @@ func init() {
 func main() {
 	providerName := flag.String("provider", "openai", "AI provider to use (openai, claude, mistral, gemini, local)")
 	model := flag.String("model", "", "Model to use (e.g., gpt-3.5-turbo, claude-2, mistral-medium, gemini-pro)")
-	debug := flag.Bool("debug", false, "Enable debug output")
 	flag.Parse()
 
 	// Get API key based on provider
 	var apiKey string
-	if *debug {
-		log.Printf("Selected provider: %s", *providerName)
-		if *model != "" {
-			log.Printf("Selected model: %s", *model)
-		}
-	}
 
 	switch *providerName {
 	case "openai":
@@ -42,42 +35,31 @@ func main() {
 		if apiKey == "" {
 			log.Fatal("OPENAI_API_KEY environment variable is not set")
 		}
-		if *debug {
-			log.Printf("OpenAI API key is set")
-		}
+
 	case "claude":
 		apiKey = os.Getenv("CLAUDE_API_KEY")
 		if apiKey == "" {
 			log.Fatal("CLAUDE_API_KEY environment variable is not set")
 		}
-		if *debug {
-			log.Printf("Claude API key is set")
-		}
+
 	case "mistral":
 		apiKey = os.Getenv("MISTRAL_API_KEY")
 		if apiKey == "" {
 			log.Fatal("MISTRAL_API_KEY environment variable is not set")
 		}
-		if *debug {
-			log.Printf("Mistral API key is set")
-		}
+
 	case "gemini":
 		apiKey = os.Getenv("GEMINI_API_KEY")
 		if apiKey == "" {
 			log.Fatal("GEMINI_API_KEY environment variable is not set")
 		}
-		if *debug {
-			log.Printf("Gemini API key is set")
-		}
+
 	case "local":
 		// No API key needed for local provider
 	default:
 		log.Fatalf("Unknown provider: %s", *providerName)
 	}
 
-	if *debug {
-		log.Printf("Creating provider with config: type=%s, model=%s", *providerName, *model)
-	}
 
 	config := ai.Config{
 		Type:   ai.ProviderType(*providerName),
@@ -90,22 +72,12 @@ func main() {
 		log.Fatal("Error creating AI provider:", err)
 	}
 
-	if *debug {
-		log.Printf("Provider created successfully")
-	}
 
-	if *debug {
-		log.Printf("Generating commit message...")
-	}
-
-	commitMsg, err := generateCommitMessage(provider, debug)
+	commitMsg, err := generateCommitMessage(provider)
 	if err != nil {
 		log.Fatal("Error generating commit message:", err)
 	}
 
-	if *debug {
-		log.Printf("Successfully generated commit message")
-	}
 
 	fmt.Println("Generated commit message:")
 	fmt.Println(commitMsg)
@@ -321,24 +293,14 @@ func getGitChanges() (string, error) {
 	return changes.String(), nil
 }
 
-func generateCommitMessage(provider ai.Provider, debug *bool) (string, error) {
+func generateCommitMessage(provider ai.Provider) (string, error) {
 	// Get project context
-	if debug != nil && *debug {
-		log.Printf("Getting project context...")
-	}
-
 	projectContext, err := getProjectContext()
 	if err != nil {
 		log.Printf("Warning: error getting project context: %v", err)
-	} else if debug != nil && *debug {
-		log.Printf("Successfully got project context")
 	}
 
 	// Get git changes
-	if debug != nil && *debug {
-		log.Printf("Getting git changes...")
-	}
-
 	changes, err := getGitChanges()
 	if err != nil {
 		return "", fmt.Errorf("error getting git changes: %v", err)
@@ -347,10 +309,6 @@ func generateCommitMessage(provider ai.Provider, debug *bool) (string, error) {
 	// If no changes, return error
 	if strings.TrimSpace(changes) == "" {
 		return "", fmt.Errorf("no changes detected in the repository")
-	}
-
-	if debug != nil && *debug {
-		log.Printf("Successfully got git changes")
 	}
 
 	return provider.GenerateCommitMessage(projectContext, changes)
