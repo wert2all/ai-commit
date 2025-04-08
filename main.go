@@ -11,7 +11,7 @@ import (
 	"strings"
 
 	"github.com/joho/godotenv"
-	"github.com/wert2all/windsurf-project/ai"
+	"github.com/wert2all/ai-commit/ai"
 )
 
 func init() {
@@ -43,7 +43,7 @@ func main() {
 			log.Fatal("OPENAI_API_KEY environment variable is not set")
 		}
 		if *debug {
-			log.Printf("Using OpenAI API key: %s", apiKey)
+			log.Printf("OpenAI API key is set")
 		}
 	case "claude":
 		apiKey = os.Getenv("CLAUDE_API_KEY")
@@ -51,7 +51,7 @@ func main() {
 			log.Fatal("CLAUDE_API_KEY environment variable is not set")
 		}
 		if *debug {
-			log.Printf("Using Claude API key: %s", apiKey)
+			log.Printf("Claude API key is set")
 		}
 	case "mistral":
 		apiKey = os.Getenv("MISTRAL_API_KEY")
@@ -59,7 +59,7 @@ func main() {
 			log.Fatal("MISTRAL_API_KEY environment variable is not set")
 		}
 		if *debug {
-			log.Printf("Using Mistral API key: %s", apiKey)
+			log.Printf("Mistral API key is set")
 		}
 	case "gemini":
 		apiKey = os.Getenv("GEMINI_API_KEY")
@@ -67,7 +67,7 @@ func main() {
 			log.Fatal("GEMINI_API_KEY environment variable is not set")
 		}
 		if *debug {
-			log.Printf("Using Gemini API key: %s", apiKey)
+			log.Printf("Gemini API key is set")
 		}
 	case "local":
 		// No API key needed for local provider
