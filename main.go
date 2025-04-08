@@ -36,6 +36,11 @@ func main() {
 		log.Fatal("Error creating AI provider:", err)
 	}
 
+	// contextBuilder := project.NewBuilder().
+	// 	AddChanges()
+	//
+	// D(contextBuilder.Build())
+	// panic("s")
 	commitMsg, err := generateCommitMessage(provider, absProjectDir)
 	if err != nil {
 		log.Fatal("Error generating commit message:", err)

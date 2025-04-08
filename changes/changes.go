@@ -9,12 +9,16 @@ import (
 
 type (
 	Changes interface {
+		Value() []byte
 		ToString() string
 	}
 	changesImpl struct {
 		changed []byte
 	}
 )
+
+// Value implements Changes.
+func (c *changesImpl) Value() []byte { return c.changed }
 
 // ToString implements Changes.
 func (c changesImpl) ToString() string {
