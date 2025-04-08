@@ -9,6 +9,7 @@ const (
 	ProviderClaude  ProviderType = "claude"
 	ProviderMistral ProviderType = "mistral"
 	ProviderGemini  ProviderType = "gemini"
+	ProviderLocal   ProviderType = "local"
 )
 
 type Config struct {
@@ -28,6 +29,12 @@ func NewProvider(config Config) (Provider, error) {
 		return NewMistralProvider(config.APIKey, config.Model), nil
 	case ProviderGemini:
 		return NewGeminiProvider(config.APIKey, config.Model), nil
+	case ProviderLocal:
+		provider, err := NewLocalProvider(config.Options)
+		if err != nil {
+			return nil, err
+		}
+		return provider, nil
 	default:
 		return nil, fmt.Errorf("unknown provider type: %s", config.Type)
 	}

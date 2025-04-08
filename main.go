@@ -22,7 +22,7 @@ func init() {
 }
 
 func main() {
-	providerName := flag.String("provider", "openai", "AI provider to use (openai, claude, mistral, gemini)")
+	providerName := flag.String("provider", "openai", "AI provider to use (openai, claude, mistral, gemini, local)")
 	model := flag.String("model", "", "Model to use (e.g., gpt-3.5-turbo, claude-2, mistral-medium, gemini-pro)")
 	debug := flag.Bool("debug", false, "Enable debug output")
 	flag.Parse()
@@ -69,6 +69,8 @@ func main() {
 		if *debug {
 			log.Printf("Using Gemini API key: %s", apiKey)
 		}
+	case "local":
+		// No API key needed for local provider
 	default:
 		log.Fatalf("Unknown provider: %s", *providerName)
 	}
