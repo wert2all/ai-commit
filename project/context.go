@@ -9,11 +9,25 @@ import (
 	"github.com/wert2all/ai-commit/changes"
 )
 
+// SystemPrompt is the standard prompt for all AI providers
+const systemPrompt = `You are a commit message generator. Generate a concise and descriptive commit message 
+following the Conventional Commits specification (https://www.conventionalcommits.org/).
+The message should be in the format: type(scope): description
+where type is one of: feat, fix, docs, style, refactor, test, or chore.
+Analyze both the project context and git changes provided to generate an appropriate commit message.
+Consider the project structure, dependencies, and current branch when determining the scope.
+Return only the commit message, nothing else.`
+
 type (
+	ProjectContext struct {
+		Context      string
+		SystemPrompt string
+	}
+
 	ContextBuilder interface {
 		AddChanges() ContextBuilder
 		AddLanguages() ContextBuilder
-		Build() (string, error)
+		Build() (*ProjectContext, error)
 	}
 	contextBuilderImpl struct {
 		files     []string
@@ -64,9 +78,9 @@ func (c contextBuilderImpl) AddChanges() ContextBuilder {
 }
 
 // Build implements ContextBuilder.
-func (c contextBuilderImpl) Build() (string, error) {
+func (c contextBuilderImpl) Build() (*ProjectContext, error) {
 	if len(c.errors) != 0 {
-		return "", c.errors[0]
+		return nil, c.errors[0]
 	}
 	var context bytes.Buffer
 
@@ -82,7 +96,10 @@ func (c contextBuilderImpl) Build() (string, error) {
 		context.Write(c.changes.Value())
 	}
 
-	return context.String(), nil
+	return &ProjectContext{
+		Context:      context.String(),
+		SystemPrompt: systemPrompt,
+	}, nil
 }
 
 func NewBuilder(projectDir string) (ContextBuilder, error) {
