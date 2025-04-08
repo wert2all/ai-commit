@@ -49,11 +49,7 @@ func (p *MistralProvider) GenerateCommitMessage(projectContext, changes string) 
 		Messages: []message{
 			{
 				Role: "system",
-				Content: "You are a commit message generator. Generate a concise and descriptive commit message " +
-					"following the Conventional Commits specification. The message should be in the format: " +
-					"type(scope): description where type is one of: feat, fix, docs, style, refactor, test, or chore. " +
-					"Consider the project structure, dependencies, and current branch when determining the scope. " +
-					"Return only the commit message, nothing else.",
+				Content: SystemPrompt,
 			},
 			{
 				Role:    "user",

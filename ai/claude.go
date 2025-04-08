@@ -40,7 +40,7 @@ func NewClaudeProvider(apiKey string, model string) *ClaudeProvider {
 func (p *ClaudeProvider) GenerateCommitMessage(projectContext, changes string) (string, error) {
 	req := claudeRequest{
 		Model:       p.model,
-		Prompt:      fmt.Sprintf("\n\nHuman: Project Context:\n\n%s\n\nChanges:\n\n%s\n\nAssistant: Generate a concise and descriptive commit message following the Conventional Commits specification. The message should be in the format: type(scope): description where type is one of: feat, fix, docs, style, refactor, test, or chore. Consider the project structure, dependencies, and current branch when determining the scope.", projectContext, changes),
+		Prompt:      fmt.Sprintf("\n\nHuman: Project Context:\n\n%s\n\nChanges:\n\n%s\n\nAssistant: %s", projectContext, changes, SystemPrompt),
 		MaxTokens:   50,
 		Temperature: 0.7,
 		Stop:        []string{"\n", "Human:"},

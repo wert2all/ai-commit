@@ -30,13 +30,7 @@ func (p *OpenAIProvider) GenerateCommitMessage(projectContext, changes string) (
 			Messages: []openai.ChatCompletionMessage{
 				{
 					Role: openai.ChatMessageRoleSystem,
-					Content: `You are a commit message generator. Generate a concise and descriptive commit message 
-					following the Conventional Commits specification (https://www.conventionalcommits.org/).
-					The message should be in the format: type(scope): description
-					where type is one of: feat, fix, docs, style, refactor, test, or chore.
-					Analyze both the project context and git changes provided to generate an appropriate commit message.
-					Consider the project structure, dependencies, and current branch when determining the scope.
-					Return only the commit message, nothing else.`,
+					Content: SystemPrompt,
 				},
 				{
 					Role: openai.ChatMessageRoleUser,
