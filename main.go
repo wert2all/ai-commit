@@ -1,23 +1,14 @@
 package main
 
 import (
-	"bytes"
 	"flag"
 	"fmt"
 	"log"
-	"os"
-	"os/exec"
 	"path/filepath"
-	"strings"
 
-	"github.com/gookit/goutil/dump"
 	"github.com/wert2all/ai-commit/ai"
-	"github.com/wert2all/ai-commit/changes"
+	"github.com/wert2all/ai-commit/project"
 )
-
-func D(vs ...any) {
-	dump.P(vs)
-}
 
 func main() {
 	providerName := flag.String("provider", "openai", "AI provider to use (openai, claude, mistral, gemini, local)")
@@ -36,212 +27,25 @@ func main() {
 		log.Fatal("Error creating AI provider:", err)
 	}
 
-	// contextBuilder, err := project.NewBuilder(absProjectDir)
-	// if err != nil {
-	// 	log.Fatal(err)
-	// }
-	//
-	// D(
-	// 	contextBuilder.
-	// 		AddLanguages().
-	// 		AddChanges().
-	// 		AddGitBranch().
-	// 		Build(),
-	// )
-	// panic("s")
+	contextBuilder, err := project.NewBuilder(absProjectDir)
+	if err != nil {
+		log.Fatal(err)
+	}
 
-	commitMsg, err := generateCommitMessage(provider, absProjectDir)
+	projectContext, err := contextBuilder.
+		AddLanguages().
+		AddChanges().
+		AddGitBranch().
+		Build()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	commitMsg, err := provider.GenerateCommitMessage(*projectContext)
 	if err != nil {
 		log.Fatal("Error generating commit message:", err)
 	}
 
 	fmt.Println("Generated commit message:")
 	fmt.Println(commitMsg)
-}
-
-type ProjectInfo struct {
-	Languages    []string
-	Dependencies map[string]string
-	Config       map[string]string
-}
-
-func detectProjectType(files []string) []string {
-	languages := make(map[string]bool)
-
-	for _, file := range files {
-		switch {
-		case strings.HasSuffix(file, ".go"):
-			languages["Go"] = true
-		case strings.HasSuffix(file, ".js") || strings.HasSuffix(file, ".ts"):
-			languages["JavaScript/TypeScript"] = true
-		case strings.HasSuffix(file, ".py"):
-			languages["Python"] = true
-		case strings.HasSuffix(file, ".php"):
-			languages["PHP"] = true
-		case strings.HasSuffix(file, ".java"):
-			languages["Java"] = true
-		case strings.HasSuffix(file, ".rb"):
-			languages["Ruby"] = true
-		case strings.HasSuffix(file, ".rs"):
-			languages["Rust"] = true
-		}
-	}
-
-	result := make([]string, 0, len(languages))
-	for lang := range languages {
-		result = append(result, lang)
-	}
-	return result
-}
-
-func readFileContent(path string) string {
-	content, err := os.ReadFile(path)
-	if err != nil {
-		return ""
-	}
-	return string(content)
-}
-
-func getProjectDependencies(repoRoot string, files []string) map[string]string {
-	deps := make(map[string]string)
-
-	// Check for various dependency files
-	for _, file := range files {
-		fullPath := filepath.Join(repoRoot, file)
-		switch filepath.Base(file) {
-		case "go.mod":
-			deps["Go Dependencies"] = readFileContent(fullPath)
-		case "package.json":
-			deps["Node.js Dependencies"] = readFileContent(fullPath)
-		case "requirements.txt":
-			deps["Python Dependencies"] = readFileContent(fullPath)
-		case "composer.json":
-			deps["PHP Dependencies"] = readFileContent(fullPath)
-		case "pom.xml":
-			deps["Maven Dependencies"] = readFileContent(fullPath)
-		case "build.gradle":
-			deps["Gradle Dependencies"] = readFileContent(fullPath)
-		case "Gemfile":
-			deps["Ruby Dependencies"] = readFileContent(fullPath)
-		case "Cargo.toml":
-			deps["Rust Dependencies"] = readFileContent(fullPath)
-		}
-	}
-
-	return deps
-}
-
-func getProjectConfig(repoRoot string, files []string) map[string]string {
-	config := make(map[string]string)
-
-	// Check for various config files
-	for _, file := range files {
-		fullPath := filepath.Join(repoRoot, file)
-		switch filepath.Base(file) {
-		case ".env":
-			config["Environment Config"] = readFileContent(fullPath)
-		case "docker-compose.yml", "docker-compose.yaml":
-			config["Docker Compose Config"] = readFileContent(fullPath)
-		case "Dockerfile":
-			config["Dockerfile"] = readFileContent(fullPath)
-		case ".gitlab-ci.yml", ".github/workflows/":
-			config["CI/CD Config"] = readFileContent(fullPath)
-		case "nginx.conf":
-			config["Nginx Config"] = readFileContent(fullPath)
-		case "webpack.config.js":
-			config["Webpack Config"] = readFileContent(fullPath)
-		}
-	}
-
-	return config
-}
-
-func getProjectContext(projectDir string) (string, error) {
-	// Use provided project directory as repository root
-	repoRoot := projectDir
-
-	// Get project structure using git ls-files
-	filesCmd := exec.Command("git", "ls-files")
-	filesCmd.Dir = repoRoot
-	filesOut, err := filesCmd.Output()
-	if err != nil {
-		return "", fmt.Errorf("error getting git files: %v", err)
-	}
-
-	// Split output into lines and filter empty lines
-	files := make([]string, 0)
-	for _, file := range strings.Split(string(filesOut), "\n") {
-		if file = strings.TrimSpace(file); file != "" {
-			files = append(files, file)
-		}
-	}
-
-	// Detect project languages
-	languages := detectProjectType(files)
-
-	// Get dependencies
-	deps := getProjectDependencies(repoRoot, files)
-
-	// Get configuration
-	config := getProjectConfig(repoRoot, files)
-
-	// Get git branch info
-	branchCmd := exec.Command("git", "branch", "--show-current")
-	branchOut, err := branchCmd.Output()
-	if err != nil {
-		log.Printf("Warning: error getting current branch: %v", err)
-	}
-
-	// Combine project context
-	var context bytes.Buffer
-
-	// Add languages
-	context.WriteString("=== Project Languages ===\n")
-	for _, lang := range languages {
-		context.WriteString(lang + "\n")
-	}
-
-	// Add dependencies
-	context.WriteString("\n=== Dependencies ===\n")
-	for depType, depContent := range deps {
-		if depContent != "" {
-			context.WriteString(fmt.Sprintf("--- %s ---\n%s\n", depType, depContent))
-		}
-	}
-
-	// Add configuration
-	context.WriteString("\n=== Configuration ===\n")
-	for configType, configContent := range config {
-		if configContent != "" {
-			context.WriteString(fmt.Sprintf("--- %s ---\n%s\n", configType, configContent))
-		}
-	}
-
-	// Add project structure
-	context.WriteString("\n=== Project Structure ===\n")
-	for _, file := range files {
-		context.WriteString(file + "\n")
-	}
-
-	// Add git branch
-	context.WriteString("\n=== Current Branch ===\n")
-	context.Write(branchOut)
-
-	return context.String(), nil
-}
-
-func generateCommitMessage(provider ai.Provider, projectDir string) (string, error) {
-	// Get project context
-	projectContext, err := getProjectContext(projectDir)
-	if err != nil {
-		log.Printf("Warning: error getting project context: %v", err)
-	}
-
-	// Get git changes
-	changes, err := changes.NewChanges()
-	if err != nil {
-		return "", fmt.Errorf("error getting git changes: %v", err)
-	}
-
-	return provider.GenerateCommitMessage(projectContext, changes)
 }

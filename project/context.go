@@ -3,7 +3,9 @@ package project
 import (
 	"bytes"
 	"fmt"
+	"os"
 	"os/exec"
+	"path/filepath"
 	"strings"
 
 	"github.com/wert2all/ai-commit/changes"
@@ -126,6 +128,39 @@ func (c contextBuilderImpl) Build() (*ProjectContext, error) {
 		Context:      context.String(),
 		SystemPrompt: systemPrompt,
 	}, nil
+}
+
+func readFileContent(path string) string {
+	content, err := os.ReadFile(path)
+	if err != nil {
+		return ""
+	}
+	return string(content)
+}
+
+func getProjectConfig(repoRoot string, files []string) map[string]string {
+	config := make(map[string]string)
+
+	// Check for various config files
+	for _, file := range files {
+		fullPath := filepath.Join(repoRoot, file)
+		switch filepath.Base(file) {
+		case ".env":
+			config["Environment Config"] = readFileContent(fullPath)
+		case "docker-compose.yml", "docker-compose.yaml":
+			config["Docker Compose Config"] = readFileContent(fullPath)
+		case "Dockerfile":
+			config["Dockerfile"] = readFileContent(fullPath)
+		case ".gitlab-ci.yml", ".github/workflows/":
+			config["CI/CD Config"] = readFileContent(fullPath)
+		case "nginx.conf":
+			config["Nginx Config"] = readFileContent(fullPath)
+		case "webpack.config.js":
+			config["Webpack Config"] = readFileContent(fullPath)
+		}
+	}
+
+	return config
 }
 
 func NewBuilder(projectDir string) (ContextBuilder, error) {

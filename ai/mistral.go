@@ -7,7 +7,7 @@ import (
 	"io"
 	"net/http"
 
-	"github.com/wert2all/ai-commit/changes"
+	"github.com/wert2all/ai-commit/project"
 )
 
 type MistralProvider struct {
@@ -45,17 +45,17 @@ func NewMistralProvider(apiKey string, model string) *MistralProvider {
 	}
 }
 
-func (p *MistralProvider) GenerateCommitMessage(projectContext string, changes changes.Changes) (string, error) {
+func (p *MistralProvider) GenerateCommitMessage(projectContext project.ProjectContext) (string, error) {
 	req := mistralRequest{
 		Model: p.model,
 		Messages: []message{
 			{
 				Role:    "system",
-				Content: SystemPrompt,
+				Content: projectContext.SystemPrompt,
 			},
 			{
 				Role:    "user",
-				Content: fmt.Sprintf("Project Context:\n\n%s\n\nChanges:\n\n%s", projectContext, changes.ToString()),
+				Content: fmt.Sprintf("Project Context:\n\n%s\n\n", projectContext.Context),
 			},
 		},
 		Temperature: 0.7,
