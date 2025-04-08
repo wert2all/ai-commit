@@ -1,4 +1,4 @@
-module github.com/wert2all/commit-generator
+module github.com/wert2all/windsurf-project
 
 go 1.21
 

@@ -2,7 +2,7 @@ package main
 
 import (
 	"bytes"
-	"context"
+	"flag"
 	"fmt"
 	"log"
 	"os"
@@ -10,17 +10,31 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/sashabaranov/go-openai"
+	"github.com/wert2all/windsurf-project/ai"
 )
 
 func main() {
+	providerName := flag.String("provider", "openai", "AI provider to use (openai)")
+	model := flag.String("model", "", "Model to use (e.g., gpt-3.5-turbo)")
+	flag.Parse()
+
 	apiKey := os.Getenv("OPENAI_API_KEY")
 	if apiKey == "" {
 		log.Fatal("OPENAI_API_KEY environment variable is not set")
 	}
 
-	client := openai.NewClient(apiKey)
-	commitMsg, err := generateCommitMessage(client)
+	config := ai.Config{
+		Type:   ai.ProviderType(*providerName),
+		APIKey: apiKey,
+		Model:  *model,
+	}
+
+	provider, err := ai.NewProvider(config)
+	if err != nil {
+		log.Fatal("Error creating AI provider:", err)
+	}
+
+	commitMsg, err := generateCommitMessage(provider)
 	if err != nil {
 		log.Fatal("Error generating commit message:", err)
 	}
@@ -239,7 +253,7 @@ func getGitChanges() (string, error) {
 	return changes.String(), nil
 }
 
-func generateCommitMessage(client *openai.Client) (string, error) {
+func generateCommitMessage(provider ai.Provider) (string, error) {
 	// Get project context
 	projectContext, err := getProjectContext()
 	if err != nil {
@@ -257,38 +271,5 @@ func generateCommitMessage(client *openai.Client) (string, error) {
 		return "", fmt.Errorf("no changes detected in the repository")
 	}
 
-	resp, err := client.CreateChatCompletion(
-		context.Background(),
-		openai.ChatCompletionRequest{
-			Model: openai.GPT3Dot5Turbo,
-			Messages: []openai.ChatCompletionMessage{
-				{
-					Role: openai.ChatMessageRoleSystem,
-					Content: `You are a commit message generator. Generate a concise and descriptive commit message 
-					following the Conventional Commits specification (https://www.conventionalcommits.org/).
-					The message should be in the format: type(scope): description
-					where type is one of: feat, fix, docs, style, refactor, test, or chore.
-					Analyze both the project context and git changes provided to generate an appropriate commit message.
-					Consider the project structure, dependencies, and current branch when determining the scope.
-					Return only the commit message, nothing else.`,
-				},
-				{
-					Role: openai.ChatMessageRoleUser,
-					Content: fmt.Sprintf("Project Context:\n\n%s\n\nChanges:\n\n%s", projectContext, changes),
-				},
-			},
-			Temperature: 0.7,
-			MaxTokens:  50,
-		},
-	)
-
-	if err != nil {
-		return "", fmt.Errorf("error calling OpenAI API: %v", err)
-	}
-
-	if len(resp.Choices) == 0 {
-		return "", fmt.Errorf("no response from OpenAI API")
-	}
-
-	return resp.Choices[0].Message.Content, nil
+	return provider.GenerateCommitMessage(projectContext, changes)
 }
