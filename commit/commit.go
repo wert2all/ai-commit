@@ -19,7 +19,7 @@ func AskUser() bool {
 	}
 
 	response = strings.TrimSpace(strings.ToLower(response))
-	return response == "yes" || response == "y"
+	return response == "yes" || response == "y" || response == ""
 }
 
 func Commit(commitMsg string, absProjectDir string) {
@@ -32,5 +32,4 @@ func Commit(commitMsg string, absProjectDir string) {
 	if err != nil {
 		log.Fatal("Error executing git commit:", string(output))
 	}
-
 }
