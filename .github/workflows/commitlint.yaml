@@ -1,12 +1,14 @@
-# .github/workflows/commitlint.yml
 name: Lint Commit Messages
 
 on:
+  push:
+    branches: [main]
   pull_request:
-    branches: [main, master]
+    branches: [main]
 
 jobs:
   commitlint:
+    name: Check Commit Message Style
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
