@@ -1,0 +1,20 @@
+name: Commit Lint
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+jobs:
+  commit-lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: npm install --save-dev @commitlint/{cli,config-conventional}
+      - name: Create commitlint.config.js
+        run: echo "module.exports = { extends: ['@commitlint/config-conventional'] };" > commitlint.config.js
+      - run: npx commitlint --from=$(git rev-parse origin/main) --to=$(git rev-parse HEAD)
