@@ -5,7 +5,7 @@ import (
 	"fmt"
 
 	"github.com/sashabaranov/go-openai"
-	"github.com/wert2all/ai-commit/changes"
+	"github.com/wert2all/ai-commit/project"
 )
 
 type OpenAIProvider struct {
@@ -23,7 +23,7 @@ func NewOpenAIProvider(apiKey string, model string) *OpenAIProvider {
 	}
 }
 
-func (p *OpenAIProvider) GenerateCommitMessage(projectContext string, changes changes.Changes) (string, error) {
+func (p *OpenAIProvider) GenerateCommitMessage(projectContext project.ProjectContext) (string, error) {
 	resp, err := p.client.CreateChatCompletion(
 		context.Background(),
 		openai.ChatCompletionRequest{
@@ -35,12 +35,12 @@ func (p *OpenAIProvider) GenerateCommitMessage(projectContext string, changes ch
 				},
 				{
 					Role:    openai.ChatMessageRoleUser,
-					Content: fmt.Sprintf("Project Context:\n\n%s\n\nChanges:\n\n%s", projectContext, changes.ToString()),
+					Content: fmt.Sprintf("Project Context:\n\n%s\n\n", projectContext.Context),
 				},
 			},
 			Temperature: 0.7,
 			MaxTokens:   50,
-		} ,
+		},
 	)
 	if err != nil {
 		return "", fmt.Errorf("error calling OpenAI API: %v", err)

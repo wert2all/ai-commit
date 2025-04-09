@@ -8,7 +8,7 @@ import (
 type ProviderType string
 
 const (
-	// ProviderOpenAI  ProviderType = "openai"
+	ProviderOpenAI ProviderType = "openai"
 	// ProviderClaude  ProviderType = "claude"
 	ProviderMistral ProviderType = "mistral"
 	// ProviderGemini  ProviderType = "gemini"
@@ -36,12 +36,12 @@ func NewProvider(providerName string, model string) (Provider, error) {
 	}
 
 	switch config.Type {
-	// case ProviderOpenAI:
-	// 	return NewOpenAIProvider(config.APIKey, config.Model), nil
-	// case ProviderClaude:
-	// 	return NewClaudeProvider(config.APIKey, config.Model), nil
 	case ProviderMistral:
 		return NewMistralProvider(config.APIKey, config.Model), nil
+	case ProviderOpenAI:
+		return NewOpenAIProvider(config.APIKey, config.Model), nil
+	// case ProviderClaude:
+	// 	return NewClaudeProvider(config.APIKey, config.Model), nil
 	// case ProviderGemini:
 	// 	return NewGeminiProvider(config.APIKey, config.Model), nil
 	// case ProviderLocal:
