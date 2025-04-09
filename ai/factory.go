@@ -90,6 +90,6 @@ func getAPIKey(providerName string) (string, error) {
 		return "", nil
 
 	default:
-		return "", fmt.Errorf("Unknown provider: %s", providerName)
+		return "", fmt.Errorf("unknown provider: %s", providerName)
 	}
 }

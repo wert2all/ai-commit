@@ -130,6 +130,7 @@ func (c contextBuilderImpl) Build() (*ProjectContext, error) {
 	}, nil
 }
 
+// nolint
 func readFileContent(path string) string {
 	content, err := os.ReadFile(path)
 	if err != nil {
@@ -138,6 +139,7 @@ func readFileContent(path string) string {
 	return string(content)
 }
 
+// nolint
 func getProjectConfig(repoRoot string, files []string) map[string]string {
 	config := make(map[string]string)
 

@@ -87,6 +87,7 @@ func (p *GeminiProvider) GenerateCommitMessage(projectContext string, changes ch
 	if err != nil {
 		return "", fmt.Errorf("error making request: %v", err)
 	}
+	// nolint
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
