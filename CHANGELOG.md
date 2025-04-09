@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.0](https://github.com/wert2all/ai-commit/compare/v1.1.0...v1.2.0) (2025-04-09)
+
+
+### Features
+
+* **commit:** allow 'enter' as yes for commit changes ([ecbd331](https://github.com/wert2all/ai-commit/commit/ecbd331c48f77cd63af0835a826891b8c63a6692))
+
 ## [1.1.0](https://github.com/wert2all/ai-commit/compare/v1.0.0...v1.1.0) (2025-04-09)
 
 
