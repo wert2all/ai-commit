@@ -36,6 +36,7 @@ func NewLocalProvider(options map[string]interface{}) (*LocalProvider, error) {
 func (p *LocalProvider) GenerateCommitMessage(projectContext string, changes changes.Changes) (string, error) {
 	panic("not implemented")
 	// Prepare the prompt using GenerateCommitMessagePrompt
+	//nolint
 	prompt := GenerateCommitMessagePrompt(projectContext, changes.ToString())
 
 	// Prepare request body
@@ -52,6 +53,7 @@ func (p *LocalProvider) GenerateCommitMessage(projectContext string, changes cha
 	if err != nil {
 		return "", err
 	}
+	// nolint
 	defer resp.Body.Close()
 
 	// Read response
