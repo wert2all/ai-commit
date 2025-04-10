@@ -1,15 +1,15 @@
 # AI Commit Message Generator
 
-A Go application that generates contextual conventional commit messages using AI (OpenAI or Claude) by analyzing your git changes.
+A Go application that generates contextual conventional commit messages using AI (OpenAI or others) by analyzing your git changes.
 
 ## Prerequisites
 
 1. You need an API key from one of the supported providers:
    - [OpenAI](https://platform.openai.com/)
-   - [Anthropic (Claude)](https://www.anthropic.com/)
    - [Mistral AI](https://mistral.ai/)
-   - [Google AI (Gemini)](https://ai.google.dev/)
-   - **Local AI (Ollama)**
+   - [Anthropic (Claude)](https://www.anthropic.com/) (comming soon)
+   - [Google AI (Gemini)](https://ai.google.dev/) (comming soon)
+   - **Local AI (Ollama)** (comming soon)
 2. Git must be installed and the application must be run from within a git repository
 3. Set your API key as an environment variable:
 
@@ -79,10 +79,7 @@ For example:
 ## Supported AI Providers
 
 - OpenAI
-- Claude
 - Mistral
-- Google Gemini
-- **Local AI (Ollama)**
 
 ## Local AI Provider Setup
 
@@ -127,6 +124,6 @@ Then you can run the executable:
   - Google Gemini (gemini-pro, gemini-pro-vision)
   - **Local AI (Ollama)**
 - Analyzes your actual git changes to generate contextual commit messages
-- Considers staged changes, unstaged changes, and untracked files
+- Considers staged changes
 - Follows [Conventional Commits](https://www.conventionalcommits.org/) specification
 - Generates precise and meaningful commit messages based on your actual code changes
