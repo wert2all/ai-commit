@@ -11,8 +11,8 @@ const (
 	ProviderOpenAI ProviderType = "openai"
 	// ProviderClaude  ProviderType = "claude"
 	ProviderMistral ProviderType = "mistral"
-	// ProviderGemini  ProviderType = "gemini"
-	ProviderLocal ProviderType = "local"
+	ProviderGemini  ProviderType = "gemini"
+	ProviderLocal   ProviderType = "local"
 )
 
 type Config struct {
@@ -43,8 +43,8 @@ func NewProvider(providerName string, model string, endpoint string) (Provider, 
 		return NewOpenAIProvider(config.APIKey, config.Model), nil
 	// case ProviderClaude:
 	// 	return NewClaudeProvider(config.APIKey, config.Model), nil
-	// case ProviderGemini:
-	// 	return NewGeminiProvider(config.APIKey, config.Model), nil
+	case ProviderGemini:
+		return NewGeminiProvider(config.APIKey, config.Model), nil
 	case ProviderLocal:
 		provider, err := NewLocalProvider(config.Endpoint, config.Model)
 		if err != nil {

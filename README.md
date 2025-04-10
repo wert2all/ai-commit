@@ -7,9 +7,9 @@ A Go application that generates contextual conventional commit messages using AI
 1. You need an API key from one of the supported providers:
    - [OpenAI](https://platform.openai.com/)
    - [Mistral AI](https://mistral.ai/)
+   - [Google AI (Gemini)](https://ai.google.dev/) (comming soon)
    - **Local Ollama**
    - [Anthropic (Claude)](https://www.anthropic.com/) (comming soon)
-   - [Google AI (Gemini)](https://ai.google.dev/) (comming soon)
 2. Git must be installed and the application must be run from within a git repository
 3. Set your API key as an environment variable:
 
@@ -72,6 +72,7 @@ For example:
 
 - OpenAI
 - Mistral
+- Gemini
 - Local Ollama
 
 ## Local AI Provider Setup
