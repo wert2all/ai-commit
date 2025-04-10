@@ -11,9 +11,6 @@ import (
 	"github.com/wert2all/ai-commit/project"
 )
 
-type Response struct {
-	Response string `json:"response"`
-}
 type LocalProvider struct {
 	model    string
 	endpoint string
@@ -27,13 +24,10 @@ func NewLocalProvider(endpoint string, model string) (*LocalProvider, error) {
 }
 
 func (p *LocalProvider) GenerateCommitMessage(projectContext project.ProjectContext) (string, error) {
-	// Prepare the prompt using GenerateCommitMessagePrompt
-	prompt := generatePrompt(projectContext)
-
 	// Prepare request body
 	requestBody, err := json.Marshal(map[string]any{
 		"model":  p.model,
-		"prompt": prompt,
+		"prompt": generatePrompt(projectContext),
 	})
 	if err != nil {
 		return "", err
@@ -85,7 +79,7 @@ func parseOllamaResponse(body []byte) (string, error) {
 		if token, ok := respObj["response"].(string); ok {
 			fullResponse.WriteString(token)
 		}
-	}
 
+	}
 	return strings.TrimSpace(fullResponse.String()), nil
 }
