@@ -9,7 +9,7 @@ A Go application that generates contextual conventional commit messages using AI
    - [Mistral AI](https://mistral.ai/)
    - [Anthropic (Claude)](https://www.anthropic.com/) (comming soon)
    - [Google AI (Gemini)](https://ai.google.dev/) (comming soon)
-   - **Local AI (Ollama)** (comming soon)
+   - **Local AI (Ollama)**
 2. Git must be installed and the application must be run from within a git repository
 3. Set your API key as an environment variable:
 
@@ -29,8 +29,6 @@ A Go application that generates contextual conventional commit messages using AI
    export GEMINI_API_KEY='your-api-key-here'
    ```
 
-   Note: The `.env` file is gitignored by default to prevent accidentally committing your API keys.
-
 ## Installation
 
 ```bash
@@ -38,12 +36,6 @@ go mod download
 ```
 
 ## Usage
-
-The application should be run from within a git repository. It will analyze:
-
-- Staged changes (`git diff --cached`)
-- Unstaged changes (`git diff`)
-- Untracked files
 
 To generate a commit message:
 
@@ -80,6 +72,7 @@ For example:
 
 - OpenAI
 - Mistral
+- Local Ollama
 
 ## Local AI Provider Setup
 
@@ -91,14 +84,7 @@ To use a local AI provider like Ollama:
 4. Run the tool with:
 
 ```bash
-go run main.go --provider local --model llama2
-```
-
-You can also specify a custom endpoint in the `.env` file:
-
-```
-LOCAL_MODEL=llama2
-LOCAL_ENDPOINT=http://localhost:11434/api/generate
+go run main.go --provider local --model llama2 -endpoint http://localhost:11434
 ```
 
 ## Build

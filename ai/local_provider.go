@@ -8,39 +8,30 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/wert2all/ai-commit/changes"
+	"github.com/wert2all/ai-commit/project"
 )
 
+type Response struct {
+	Response string `json:"response"`
+}
 type LocalProvider struct {
 	model    string
 	endpoint string
 }
 
-func NewLocalProvider(options map[string]interface{}) (*LocalProvider, error) {
-	model, ok := options["model"].(string)
-	if !ok {
-		model = "llama2" // default model
-	}
-
-	endpoint, ok := options["endpoint"].(string)
-	if !ok {
-		endpoint = "http://localhost:11434/api/generate" // default Ollama endpoint
-	}
-
+func NewLocalProvider(endpoint string, model string) (*LocalProvider, error) {
 	return &LocalProvider{
 		model:    model,
-		endpoint: endpoint,
+		endpoint: endpoint + "/api/generate",
 	}, nil
 }
 
-func (p *LocalProvider) GenerateCommitMessage(projectContext string, changes changes.Changes) (string, error) {
-	panic("not implemented")
+func (p *LocalProvider) GenerateCommitMessage(projectContext project.ProjectContext) (string, error) {
 	// Prepare the prompt using GenerateCommitMessagePrompt
-	//nolint
-	prompt := GenerateCommitMessagePrompt(projectContext, changes.ToString())
+	prompt := generatePrompt(projectContext)
 
 	// Prepare request body
-	requestBody, err := json.Marshal(map[string]interface{}{
+	requestBody, err := json.Marshal(map[string]any{
 		"model":  p.model,
 		"prompt": prompt,
 	})
@@ -53,6 +44,10 @@ func (p *LocalProvider) GenerateCommitMessage(projectContext string, changes cha
 	if err != nil {
 		return "", err
 	}
+	if resp.StatusCode != 200 {
+		return "", fmt.Errorf("error responce from ollama: %s", resp.Status)
+	}
+
 	// nolint
 	defer resp.Body.Close()
 
@@ -62,18 +57,35 @@ func (p *LocalProvider) GenerateCommitMessage(projectContext string, changes cha
 		return "", err
 	}
 
-	// Parse response
-	var response map[string]interface{}
-	err = json.Unmarshal(body, &response)
-	if err != nil {
-		return "", err
+	return parseOllamaResponse(body)
+}
+
+func generatePrompt(projectContext project.ProjectContext) string {
+	return "\n" + projectContext.SystemPrompt + "\n\n" + projectContext.Context
+}
+
+func parseOllamaResponse(body []byte) (string, error) {
+	// Split the response by newlines to get individual JSON objects
+	lines := strings.Split(string(body), "\n")
+
+	var fullResponse strings.Builder
+
+	for _, line := range lines {
+		if line == "" {
+			continue
+		}
+
+		// Parse each JSON object
+		var respObj map[string]any
+		if err := json.Unmarshal([]byte(line), &respObj); err != nil {
+			return "", fmt.Errorf("failed to parse JSON: %w", err)
+		}
+
+		// Extract the token from the "response" field
+		if token, ok := respObj["response"].(string); ok {
+			fullResponse.WriteString(token)
+		}
 	}
 
-	// Extract generated text
-	responseText, ok := response["response"].(string)
-	if !ok {
-		return "", fmt.Errorf("invalid response from local AI: %s", string(body))
-	}
-
-	return strings.TrimSpace(responseText), nil
+	return strings.TrimSpace(fullResponse.String()), nil
 }

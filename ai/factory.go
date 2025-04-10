@@ -12,17 +12,17 @@ const (
 	// ProviderClaude  ProviderType = "claude"
 	ProviderMistral ProviderType = "mistral"
 	// ProviderGemini  ProviderType = "gemini"
-	// ProviderLocal   ProviderType = "local"
+	ProviderLocal ProviderType = "local"
 )
 
 type Config struct {
-	Type    ProviderType
-	APIKey  string
-	Model   string
-	Options map[string]any
+	Type     ProviderType
+	APIKey   string
+	Model    string
+	Endpoint string
 }
 
-func NewProvider(providerName string, model string) (Provider, error) {
+func NewProvider(providerName string, model string, endpoint string) (Provider, error) {
 	// Get API key based on provider
 	apiKey, err := getAPIKey(providerName)
 	if err != nil {
@@ -30,9 +30,10 @@ func NewProvider(providerName string, model string) (Provider, error) {
 	}
 
 	config := Config{
-		Type:   ProviderType(providerName),
-		APIKey: apiKey,
-		Model:  model,
+		Type:     ProviderType(providerName),
+		APIKey:   apiKey,
+		Model:    model,
+		Endpoint: endpoint,
 	}
 
 	switch config.Type {
@@ -44,12 +45,12 @@ func NewProvider(providerName string, model string) (Provider, error) {
 	// 	return NewClaudeProvider(config.APIKey, config.Model), nil
 	// case ProviderGemini:
 	// 	return NewGeminiProvider(config.APIKey, config.Model), nil
-	// case ProviderLocal:
-	// 	provider, err := NewLocalProvider(config.Options)
-	// 	if err != nil {
-	// 		return nil, err
-	// 	}
-	// 	return provider, nil
+	case ProviderLocal:
+		provider, err := NewLocalProvider(config.Endpoint, config.Model)
+		if err != nil {
+			return nil, err
+		}
+		return provider, nil
 	default:
 		return nil, fmt.Errorf("unknown provider type: %s", config.Type)
 	}

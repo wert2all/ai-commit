@@ -15,6 +15,7 @@ func main() {
 	providerName := flag.String("provider", "openai", "AI provider to use (openai, claude, mistral, gemini, local)")
 	model := flag.String("model", "", "Model to use (e.g., gpt-3.5-turbo, claude-2, mistral-medium, gemini-pro)")
 	projectDir := flag.String("dir", ".", "Project directory path")
+	providerEndpoint := flag.String("endpoint", "", "Local provider endpoint1")
 	flag.Parse()
 
 	// Convert relative path to absolute
@@ -23,7 +24,7 @@ func main() {
 		log.Fatalf("Error resolving project directory path: %v", err)
 	}
 
-	provider, err := ai.NewProvider(*providerName, *model)
+	provider, err := ai.NewProvider(*providerName, *model, *providerEndpoint)
 	if err != nil {
 		log.Fatal("Error creating AI provider:", err)
 	}
