@@ -83,6 +83,12 @@ func getAPIKey(providerName string) (string, error) {
 		}
 		return apiKey, nil
 
+	case "openrouter":
+		apiKey := os.Getenv("OPENROUTER_API_KEY")
+		if apiKey == "" {
+			return "", fmt.Errorf("OPENROUTER_API_KEY environment variable is not set")
+		}
+		return apiKey, nil
 	case "local":
 		// No API key needed for local provider
 		return "", nil
