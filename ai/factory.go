@@ -14,11 +14,12 @@ type (
 )
 
 const (
-	ProviderOpenAI  ProviderType = "openai"
-	ProviderClaude  ProviderType = "claude"
-	ProviderMistral ProviderType = "mistral"
-	ProviderGemini  ProviderType = "gemini"
-	ProviderLocal   ProviderType = "local"
+	ProviderOpenAI     ProviderType = "openai"
+	ProviderClaude     ProviderType = "claude"
+	ProviderMistral    ProviderType = "mistral"
+	ProviderGemini     ProviderType = "gemini"
+	ProviderOpenRouter ProviderType = "openrouter"
+	ProviderLocal      ProviderType = "local"
 )
 
 func NewProvider(config Config) (Provider, error) {
@@ -31,6 +32,8 @@ func NewProvider(config Config) (Provider, error) {
 		return NewClaudeProvider(config.APIKey, config.Model), nil
 	case ProviderGemini:
 		return NewGeminiProvider(config.APIKey, config.Model), nil
+	case ProviderOpenRouter:
+		return NewOpenRouterProvider(config.APIKey, config.Model), nil
 	case ProviderLocal:
 		return NewLocalProvider(config.Endpoint, config.Model), nil
 	default:
