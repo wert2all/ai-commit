@@ -7,6 +7,7 @@ import (
 	"github.com/wert2all/ai-commit/ai"
 	"github.com/wert2all/ai-commit/commit"
 	"github.com/wert2all/ai-commit/project"
+	"github.com/wert2all/ai-commit/ui"
 )
 
 func main() {
@@ -39,8 +40,7 @@ func main() {
 		log.Fatal("Error generating commit message:", err)
 	}
 
-	fmt.Println("Generated commit message:")
-	fmt.Println(commitMsg)
+	fmt.Println(ui.NewCard("Commit message", commitMsg, 60))
 
 	if config.Options.WithCommit {
 		if shouldCommit := commit.AskUser(); shouldCommit {
