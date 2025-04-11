@@ -8,8 +8,9 @@ A Go application that generates contextual conventional commit messages using AI
    - [OpenAI](https://platform.openai.com/)
    - [Mistral AI](https://mistral.ai/)
    - [Google AI (Gemini)](https://ai.google.dev/)
-   - **Local Ollama**
    - [Anthropic (Claude)](https://www.anthropic.com/)
+   - [OpenRouter](https://openrouter.ai)
+   - **Local Ollama**
 2. Git must be installed and the application must be run from within a git repository
 3. Set your API key as an environment variable:
 
@@ -27,6 +28,9 @@ A Go application that generates contextual conventional commit messages using AI
 
    # For Gemini
    export GEMINI_API_KEY='your-api-key-here'
+
+   # For OpenRouter
+   export OPENROUTER_API_KEY='your-api-key-here'
    ```
 
 ## Installation
@@ -55,6 +59,9 @@ go run main.go --provider mistral --model mistral-medium
 # Use Gemini
 go run main.go --provider gemini --model gemini-pro
 
+#Use OpenRouter
+go run main.go --provider openrouter --model optimus-alpha
+
 # Use Local AI (Ollama)
 go run main.go --provider local --model llama2
 ```
@@ -73,6 +80,8 @@ For example:
 - OpenAI
 - Mistral
 - Gemini
+- Claude
+- OpenRouter
 - Claude
 - Local Ollama
 
@@ -110,6 +119,7 @@ Then you can run the executable:
   - Claude (claude-2, claude-instant-1)
   - Mistral AI (mistral-medium, mistral-small, mistral-tiny)
   - Google Gemini (gemini-pro, gemini-pro-vision)
+  - OpenRouter
   - **Local AI (Ollama)**
 - Analyzes your actual git changes to generate contextual commit messages
 - Considers staged changes
