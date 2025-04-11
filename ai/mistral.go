@@ -37,7 +37,7 @@ type mistralResponse struct {
 
 func NewMistralProvider(apiKey string, model string) *MistralProvider {
 	if model == "" {
-		model = "mistral-medium" // default model
+		model = "codestral-latest" // default model
 	}
 	return &MistralProvider{
 		apiKey: apiKey,
