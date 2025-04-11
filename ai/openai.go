@@ -31,7 +31,7 @@ func (p *OpenAIProvider) GenerateCommitMessage(projectContext project.ProjectCon
 			Messages: []openai.ChatCompletionMessage{
 				{
 					Role:    openai.ChatMessageRoleSystem,
-					Content: SystemPrompt,
+					Content: projectContext.SystemPrompt,
 				},
 				{
 					Role:    openai.ChatMessageRoleUser,
