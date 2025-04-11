@@ -47,8 +47,7 @@ A Go application that generates contextual conventional commit messages using AI
    - [Anthropic (Claude)](https://www.anthropic.com/)
    - [OpenRouter](https://openrouter.ai)
    - **Local Ollama**
-2. Git must be installed and the application must be run from within a git repository
-3. Set your API key as an environment variable:
+2. Set your API key as an environment variable:
 
    Option 1: Using environment variables
 
@@ -117,22 +116,21 @@ For example:
 
 ## OpenRouter Setup
 
-OpenRouter provides access to various AI models, including some free ones that don't require billing information:
+OpenRouter provides access to various AI models. By default, the tool uses OpenRouter's default model, but you can also specify a model if desired.
 
 1. Sign up at [OpenRouter](https://openrouter.ai)
 2. Navigate to your account settings to generate an API key
-3. To use a free model, specify one of the available free models:
+3. Run the tool with OpenRouter as the provider (default model):
 
-```bash
-# Use a free OpenRouter model
-./ai-commit --provider openrouter --model openrouter/auto
+   ```bash
+   ./ai-commit --provider openrouter
+   ```
 
-# Other free tiers may include:
-./ai-commit --provider openrouter --model mistralai/mistral-7b-instruct
-./ai-commit --provider openrouter --model openchat/openchat-7b
-```
+   Or specify a model explicitly:
 
-The `openrouter/auto` model will automatically route to the best available free model.
+   ```bash
+   ./ai-commit --provider openrouter --model mistralai/mistral-7b-instruct
+   ```
 
 ## Local AI Provider Setup
 
