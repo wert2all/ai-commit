@@ -155,7 +155,7 @@ func (c contextBuilderImpl) Build() (*ProjectContext, error) {
 
 	if c.changes != nil {
 		context.WriteString("\n=== Changes ===\n")
-		context.Write(c.changes.Value())
+		context.Write(c.changes.Diff())
 	}
 
 	return &ProjectContext{
