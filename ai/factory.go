@@ -2,7 +2,6 @@ package ai
 
 import (
 	"fmt"
-	"os"
 )
 
 type ProviderType string
@@ -15,27 +14,7 @@ const (
 	ProviderLocal   ProviderType = "local"
 )
 
-type Config struct {
-	Type     ProviderType
-	APIKey   string
-	Model    string
-	Endpoint string
-}
-
-func NewProvider(providerName string, model string, endpoint string) (Provider, error) {
-	// Get API key based on provider
-	apiKey, err := getAPIKey(providerName)
-	if err != nil {
-		return nil, err
-	}
-
-	config := Config{
-		Type:     ProviderType(providerName),
-		APIKey:   apiKey,
-		Model:    model,
-		Endpoint: endpoint,
-	}
-
+func NewProvider(config Config) (Provider, error) {
 	switch config.Type {
 	case ProviderMistral:
 		return NewMistralProvider(config.APIKey, config.Model), nil
@@ -53,44 +32,5 @@ func NewProvider(providerName string, model string, endpoint string) (Provider, 
 		return provider, nil
 	default:
 		return nil, fmt.Errorf("unknown provider type: %s", config.Type)
-	}
-}
-
-func getAPIKey(providerName string) (string, error) {
-	switch providerName {
-	case "openai":
-		apiKey := os.Getenv("OPENAI_API_KEY")
-		if apiKey == "" {
-			return "", fmt.Errorf("OPENAI_API_KEY environment variable is not set")
-		}
-		return apiKey, nil
-
-	case "claude":
-		apiKey := os.Getenv("CLAUDE_API_KEY")
-		if apiKey == "" {
-			return "", fmt.Errorf("CLAUDE_API_KEY environment variable is not set")
-		}
-		return apiKey, nil
-
-	case "mistral":
-		apiKey := os.Getenv("MISTRAL_API_KEY")
-		if apiKey == "" {
-			return "", fmt.Errorf("MISTRAL_API_KEY environment variable is not set")
-		}
-		return apiKey, nil
-
-	case "gemini":
-		apiKey := os.Getenv("GEMINI_API_KEY")
-		if apiKey == "" {
-			return "", fmt.Errorf("GEMINI_API_KEY environment variable is not set")
-		}
-		return apiKey, nil
-
-	case "local":
-		// No API key needed for local provider
-		return "", nil
-
-	default:
-		return "", fmt.Errorf("unknown provider: %s", providerName)
 	}
 }
