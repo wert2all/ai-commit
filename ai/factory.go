@@ -2,9 +2,16 @@ package ai
 
 import (
 	"fmt"
+
+	"github.com/wert2all/ai-commit/project"
 )
 
-type ProviderType string
+type (
+	ProviderType string
+	Provider     interface {
+		GenerateCommitMessage(projectContext project.ProjectContext) (string, error)
+	}
+)
 
 const (
 	ProviderOpenAI  ProviderType = "openai"
