@@ -19,12 +19,14 @@ A Go application that generates contextual conventional commit messages using AI
 
 ## Supported AI Providers
 
-- OpenAI
-- Mistral
-- Gemini
-- Claude
-- OpenRouter
-- Local Ollama
+| Provider     | Default Model             |
+| ------------ | ------------------------- |
+| OpenAI       | gpt-3.5-turbo             |
+| Claude       | claude-3-7-sonnet-latest  |
+| Mistral      | codestral-latest          |
+| Gemini       | gemini-2.0-flash          |
+| OpenRouter   | openrouter/optimus-alpha  |
+| Local Ollama | no default (must specify) |
 
 ## Options
 
