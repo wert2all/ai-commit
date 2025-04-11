@@ -74,7 +74,7 @@ func (p *ClaudeProvider) GenerateCommitMessage(projectContext project.ProjectCon
 
 func NewClaudeProvider(apiKey string, model string) *ClaudeProvider {
 	if model == "" {
-		model = "claude-2" // default model
+		model = "claude-3-7-sonnet-latest" // default model
 	}
 	return &ClaudeProvider{
 		apiKey: apiKey,

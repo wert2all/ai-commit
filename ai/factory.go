@@ -36,6 +36,9 @@ func NewProvider(config Config) (Provider, error) {
 	case ProviderOpenRouter:
 		return NewOpenRouterProvider(config.APIKey, config.Model), nil
 	case ProviderLocal:
+		if config.Model == "" {
+			return nil, fmt.Errorf("empty model")
+		}
 		return NewLocalProvider(config.Endpoint, config.Model), nil
 	default:
 		return nil, fmt.Errorf("unknown provider type: %s", config.Type)
