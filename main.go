@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"log"
+	"os"
 
 	"github.com/wert2all/ai-commit/ai"
 	"github.com/wert2all/ai-commit/commit"
@@ -10,20 +10,25 @@ import (
 	"github.com/wert2all/ai-commit/ui"
 )
 
+var cardWidth = 60
+
 func main() {
 	config, err := ai.ReadConfig()
 	if err != nil {
-		log.Fatalf("Error read config: %v", err)
+		fmt.Println(ui.NewError(err.Error(), cardWidth))
+		os.Exit(1)
 	}
 
 	provider, err := ai.NewProvider(*config)
 	if err != nil {
-		log.Fatal("Error creating AI provider:", err)
+		fmt.Println(ui.NewError(err.Error(), cardWidth))
+		os.Exit(1)
 	}
 
 	contextBuilder, err := project.NewBuilder(config.Directory)
 	if err != nil {
-		log.Fatal(err)
+		fmt.Println(ui.NewError(err.Error(), cardWidth))
+		os.Exit(1)
 	}
 
 	projectContext, err := contextBuilder.
@@ -32,15 +37,17 @@ func main() {
 		AddGitBranch().
 		Build()
 	if err != nil {
-		log.Fatal(err)
+		fmt.Println(ui.NewError(err.Error(), cardWidth))
+		os.Exit(1)
 	}
 
 	commitMsg, err := provider.GenerateCommitMessage(*projectContext)
 	if err != nil {
-		log.Fatal("Error generating commit message:", err)
+		fmt.Println(ui.NewError(err.Error(), cardWidth))
+		os.Exit(1)
 	}
 
-	fmt.Println(ui.NewCard("Commit message", commitMsg, 60))
+	fmt.Println(ui.NewCard("Commit message", commitMsg, cardWidth))
 
 	if config.Options.WithCommit {
 		if shouldCommit := commit.AskUser(); shouldCommit {

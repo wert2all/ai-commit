@@ -3,7 +3,6 @@ package ai
 import (
 	"flag"
 	"fmt"
-	"log"
 	"os"
 	"path/filepath"
 )
@@ -33,7 +32,7 @@ func ReadConfig() (*Config, error) {
 	// Convert relative path to absolute
 	absProjectDir, err := filepath.Abs(*projectDir)
 	if err != nil {
-		log.Fatalf("Error resolving project directory path: %v", err)
+		return nil, fmt.Errorf("error resolving project directory path: %v", err)
 	}
 
 	// Get API key based on provider
