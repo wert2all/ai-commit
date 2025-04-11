@@ -1,10 +1,8 @@
 package main
 
 import (
-	"flag"
 	"fmt"
 	"log"
-	"path/filepath"
 
 	"github.com/wert2all/ai-commit/ai"
 	"github.com/wert2all/ai-commit/commit"
@@ -12,24 +10,17 @@ import (
 )
 
 func main() {
-	providerName := flag.String("provider", "openai", "AI provider to use (openai, claude, mistral, gemini, local)")
-	model := flag.String("model", "", "Model to use (e.g., gpt-3.5-turbo, claude-2, mistral-medium, gemini-pro)")
-	projectDir := flag.String("dir", ".", "Project directory path")
-	providerEndpoint := flag.String("endpoint", "", "Local provider endpoint1")
-	flag.Parse()
-
-	// Convert relative path to absolute
-	absProjectDir, err := filepath.Abs(*projectDir)
+	config, err := ai.ReadConfig()
 	if err != nil {
-		log.Fatalf("Error resolving project directory path: %v", err)
+		log.Fatalf("Error read config: %v", err)
 	}
 
-	provider, err := ai.NewProvider(*providerName, *model, *providerEndpoint)
+	provider, err := ai.NewProvider(*config)
 	if err != nil {
 		log.Fatal("Error creating AI provider:", err)
 	}
 
-	contextBuilder, err := project.NewBuilder(absProjectDir)
+	contextBuilder, err := project.NewBuilder(config.Directory)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -52,7 +43,7 @@ func main() {
 	fmt.Println(commitMsg)
 
 	if commit.AskUser() {
-		commit.Commit(commitMsg, absProjectDir)
+		commit.Commit(commitMsg, config.Directory)
 		fmt.Println("Successfully committed changes with the generated message!")
 	} else {
 		fmt.Println("Commit cancelled.")
