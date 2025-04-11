@@ -1,5 +1,25 @@
 # Changelog
 
+## [1.3.0](https://github.com/wert2all/ai-commit/compare/v1.2.0...v1.3.0) (2025-04-11)
+
+
+### Features
+
+* add Claude support ([6ecfafa](https://github.com/wert2all/ai-commit/commit/6ecfafa3a48107d655e9ae8bba2bebcb33dc1cdf))
+* add option for commit control ([3c57bf2](https://github.com/wert2all/ai-commit/commit/3c57bf2250e6d28ecde0b6d9add2575f7dd5afb9))
+* **ai:** add local AI provider with Ollama support ([c06ce48](https://github.com/wert2all/ai-commit/commit/c06ce483c0064954119923c77d7392657990c041))
+* enable Gemini provider ([927a4a6](https://github.com/wert2all/ai-commit/commit/927a4a6324bacfdacbd380312164ca1e02d93a58))
+* **ui:** add card display for generated commit message ([c6bc3f3](https://github.com/wert2all/ai-commit/commit/c6bc3f3613615dc88bd08924a3b01693918f81b8))
+
+
+### Bug Fixes
+
+* **error:** how error using tui library ([bb1ce78](https://github.com/wert2all/ai-commit/commit/bb1ce78ca6d260a7d6d7e8603527a9eaf7b9082b))
+* **openai:** use project context system prompt in commit message generation ([c0fb134](https://github.com/wert2all/ai-commit/commit/c0fb134ef6a092be5d37f9c7fbe69160ff08f8a9))
+* remove unnecessary error handling in NewLocalProvider function ([d55eb7d](https://github.com/wert2all/ai-commit/commit/d55eb7ddecd46107a27e7117ec1e05a546766ba4))
+* remove unnecessary SystemPrompt and GenerateCommitMessagePrompt functions ([8588731](https://github.com/wert2all/ai-commit/commit/8588731fad2e1d4ae1cb269cc20f837456d08f42))
+* update README and clean up local ollama implementation ([448f893](https://github.com/wert2all/ai-commit/commit/448f893bbbeac6f2658f02abf95d0feee36d37bd))
+
 ## [1.2.0](https://github.com/wert2all/ai-commit/compare/v1.1.0...v1.2.0) (2025-04-09)
 
 
