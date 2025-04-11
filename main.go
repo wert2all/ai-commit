@@ -15,20 +15,17 @@ var cardWidth = 60
 func main() {
 	config, err := ai.ReadConfig()
 	if err != nil {
-		fmt.Println(ui.NewError(err.Error(), cardWidth))
-		os.Exit(1)
+		handleError(err)
 	}
 
 	provider, err := ai.NewProvider(*config)
 	if err != nil {
-		fmt.Println(ui.NewError(err.Error(), cardWidth))
-		os.Exit(1)
+		handleError(err)
 	}
 
 	contextBuilder, err := project.NewBuilder(config.Directory)
 	if err != nil {
-		fmt.Println(ui.NewError(err.Error(), cardWidth))
-		os.Exit(1)
+		handleError(err)
 	}
 
 	projectContext, err := contextBuilder.
@@ -37,14 +34,12 @@ func main() {
 		AddGitBranch().
 		Build()
 	if err != nil {
-		fmt.Println(ui.NewError(err.Error(), cardWidth))
-		os.Exit(1)
+		handleError(err)
 	}
 
 	commitMsg, err := provider.GenerateCommitMessage(*projectContext)
 	if err != nil {
-		fmt.Println(ui.NewError(err.Error(), cardWidth))
-		os.Exit(1)
+		handleError(err)
 	}
 
 	fmt.Println(ui.NewCard("Commit message", commitMsg, cardWidth))
@@ -57,4 +52,9 @@ func main() {
 			fmt.Println("Commit cancelled.")
 		}
 	}
+}
+
+func handleError(err error) {
+	fmt.Println(ui.NewError(err.Error(), cardWidth))
+	os.Exit(1)
 }
