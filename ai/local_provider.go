@@ -16,11 +16,11 @@ type LocalProvider struct {
 	endpoint string
 }
 
-func NewLocalProvider(endpoint string, model string) (*LocalProvider, error) {
+func NewLocalProvider(endpoint string, model string) *LocalProvider {
 	return &LocalProvider{
 		model:    model,
 		endpoint: endpoint + "/api/generate",
-	}, nil
+	}
 }
 
 func (p *LocalProvider) GenerateCommitMessage(projectContext project.ProjectContext) (string, error) {
