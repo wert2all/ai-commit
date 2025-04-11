@@ -2,6 +2,40 @@
 
 A Go application that generates contextual conventional commit messages using AI (OpenAI or others) by analyzing your git changes.
 
+## Features
+
+- Supports multiple AI providers:
+  - OpenAI (GPT-3.5-turbo, GPT-4)
+  - Claude (claude-2, claude-instant-1)
+  - Mistral AI (mistral-medium, mistral-small, mistral-tiny)
+  - Google Gemini (gemini-pro, gemini-pro-vision)
+  - OpenRouter (with access to free and paid models)
+  - **Local AI (Ollama)**
+- Analyzes your actual git changes to generate contextual commit messages
+- Considers staged changes
+- Follows [Conventional Commits](https://www.conventionalcommits.org/) specification
+- Generates precise and meaningful commit messages based on your actual code changes
+- Commit changes with generated message
+
+## Supported AI Providers
+
+- OpenAI
+- Mistral
+- Gemini
+- Claude
+- OpenRouter
+- Local Ollama
+
+## Options
+
+| Option             | Description                                                                  |
+| ------------------ | ---------------------------------------------------------------------------- |
+| `--provider`       | Specify the AI provider (openai, claude, mistral, gemini, openrouter, local) |
+| `--model`          | Specify the model to use with the selected provider                          |
+| `--endpoint`       | Custom API endpoint URL (useful for local deployments)                       |
+|                    |                                                                              |
+| `--without-commit` | Generate a commit message without committing changes                         |
+
 ## Prerequisites
 
 1. You need an API key from one of the supported providers:
@@ -75,25 +109,6 @@ For example:
 - `fix(api): resolve race condition in database connection pool`
 - `docs(readme): update installation instructions`
 
-## Options
-
-| Option             | Description                                                                  |
-| ------------------ | ---------------------------------------------------------------------------- |
-| `--provider`       | Specify the AI provider (openai, claude, mistral, gemini, openrouter, local) |
-| `--model`          | Specify the model to use with the selected provider                          |
-| `--endpoint`       | Custom API endpoint URL (useful for local deployments)                       |
-|                    |                                                                              |
-| `--without-commit` | Generate a commit message without committing changes                         |
-
-## Supported AI Providers
-
-- OpenAI
-- Mistral
-- Gemini
-- Claude
-- OpenRouter
-- Local Ollama
-
 ## OpenRouter Setup
 
 OpenRouter provides access to various AI models, including some free ones that don't require billing information:
@@ -139,18 +154,3 @@ Then you can run the executable:
 ```bash
 ./commit-generator
 ```
-
-## Features
-
-- Supports multiple AI providers:
-  - OpenAI (GPT-3.5-turbo, GPT-4)
-  - Claude (claude-2, claude-instant-1)
-  - Mistral AI (mistral-medium, mistral-small, mistral-tiny)
-  - Google Gemini (gemini-pro, gemini-pro-vision)
-  - OpenRouter (with access to free and paid models)
-  - **Local AI (Ollama)**
-- Analyzes your actual git changes to generate contextual commit messages
-- Considers staged changes
-- Follows [Conventional Commits](https://www.conventionalcommits.org/) specification
-- Generates precise and meaningful commit messages based on your actual code changes
-- Commit changes with generated message
