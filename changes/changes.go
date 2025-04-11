@@ -1,7 +1,6 @@
 package changes
 
 import (
-	"bytes"
 	"fmt"
 	"os/exec"
 	"strings"
@@ -9,24 +8,15 @@ import (
 
 type (
 	Changes interface {
-		Value() []byte
-		ToString() string
+		Diff() []byte
 	}
 	changesImpl struct {
 		changed []byte
 	}
 )
 
-// Value implements Changes.
-func (c *changesImpl) Value() []byte { return c.changed }
-
-// ToString implements Changes.
-func (c changesImpl) ToString() string {
-	var changes bytes.Buffer
-	changes.WriteString("=== Changes ===\n")
-	changes.Write(c.changed)
-	return changes.String()
-}
+// Diff implements Changes.
+func (c *changesImpl) Diff() []byte { return c.changed }
 
 func NewChanges() (Changes, error) {
 	changedCmd := exec.Command("git", "diff", "--cached", "--diff-algorithm=minimal")
