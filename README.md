@@ -75,6 +75,16 @@ For example:
 - `fix(api): resolve race condition in database connection pool`
 - `docs(readme): update installation instructions`
 
+## Options
+
+| Option             | Description                                                                  |
+| ------------------ | ---------------------------------------------------------------------------- |
+| `--provider`       | Specify the AI provider (openai, claude, mistral, gemini, openrouter, local) |
+| `--model`          | Specify the model to use with the selected provider                          |
+| `--endpoint`       | Custom API endpoint URL (useful for local deployments)                       |
+|                    |                                                                              |
+| `--without-commit` | Generate a commit message without committing changes                         |
+
 ## Supported AI Providers
 
 - OpenAI
@@ -143,3 +153,4 @@ Then you can run the executable:
 - Considers staged changes
 - Follows [Conventional Commits](https://www.conventionalcommits.org/) specification
 - Generates precise and meaningful commit messages based on your actual code changes
+- Commit changes with generated message
