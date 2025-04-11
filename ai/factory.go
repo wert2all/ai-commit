@@ -25,11 +25,7 @@ func NewProvider(config Config) (Provider, error) {
 	case ProviderGemini:
 		return NewGeminiProvider(config.APIKey, config.Model), nil
 	case ProviderLocal:
-		provider, err := NewLocalProvider(config.Endpoint, config.Model)
-		if err != nil {
-			return nil, err
-		}
-		return provider, nil
+		return NewLocalProvider(config.Endpoint, config.Model), nil
 	default:
 		return nil, fmt.Errorf("unknown provider type: %s", config.Type)
 	}
