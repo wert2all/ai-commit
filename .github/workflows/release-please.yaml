@@ -14,7 +14,7 @@ jobs:
   release-please:
     name: Process Next Release
     runs-on: ubuntu-latest
-    timeout-minutes: 10 # Add timeout for safety
+    timeout-minutes: 10
 
     steps:
       - name: Run Release Please
@@ -41,17 +41,22 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v4
         with:
-          go-version: '1.24.2' # Adjust this to your Go version
+          go-version: '1.24.2'
 
       - name: Build Go application for Linux
+        env:
+          TAG_NAME: ${{ needs.release-please.outputs.tag_name }}
         run: |
+          # Extract version from tag 
+          VERSION=${TAG_NAME}
+
           # Build for Linux
-          GOOS=linux GOARCH=amd64 go build -ldflags "-s -w" -o ai-commit-linux-amd64 ./
+          GOOS=linux GOARCH=amd64 go build -ldflags "-s -w -X main.Version=$VERSION" -o "ai-commit-linux-amd64-$VERSION" ./
 
       - name: Upload binary to release
         uses: softprops/action-gh-release@v1
         with:
-          files: ai-commit-linux-amd64
+          files: ai-commit-*
           tag_name: ${{ needs.release-please.outputs.tag_name }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
