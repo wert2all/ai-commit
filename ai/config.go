@@ -8,12 +8,17 @@ import (
 	"path/filepath"
 )
 
+type Options struct {
+	WithCommit bool
+}
+
 type Config struct {
 	Directory string
 	Type      ProviderType
 	Endpoint  string
 	APIKey    string
 	Model     string
+	Options   Options
 }
 
 func ReadConfig() (*Config, error) {
@@ -21,6 +26,8 @@ func ReadConfig() (*Config, error) {
 	model := flag.String("model", "", "Model to use (e.g., gpt-3.5-turbo, claude-2, mistral-medium, gemini-pro)")
 	projectDir := flag.String("dir", ".", "Project directory path")
 	endpoint := flag.String("endpoint", "", "Local provider endpoint1")
+	withoutCommit := flag.Bool("without-commit", false, "commit a source after generate")
+
 	flag.Parse()
 
 	// Convert relative path to absolute
@@ -40,6 +47,9 @@ func ReadConfig() (*Config, error) {
 		Model:     *model,
 		Endpoint:  *endpoint,
 		Directory: absProjectDir,
+		Options: Options{
+			WithCommit: !*withoutCommit,
+		},
 	}
 	return &config, nil
 }

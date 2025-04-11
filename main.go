@@ -42,10 +42,12 @@ func main() {
 	fmt.Println("Generated commit message:")
 	fmt.Println(commitMsg)
 
-	if commit.AskUser() {
-		commit.Commit(commitMsg, config.Directory)
-		fmt.Println("Successfully committed changes with the generated message!")
-	} else {
-		fmt.Println("Commit cancelled.")
+	if config.Options.WithCommit {
+		if shouldCommit := commit.AskUser(); shouldCommit {
+			commit.Commit(commitMsg, config.Directory)
+			fmt.Println("Successfully committed changes with the generated message!")
+		} else {
+			fmt.Println("Commit cancelled.")
+		}
 	}
 }
