@@ -71,9 +71,13 @@ A Go application that generates contextual conventional commit messages using AI
 
 ## Installation
 
-```bash
-go mod download
-```
+1. Download the latest release from the [GitHub Releases page](https://github.com/wert2all/ai-commit/releases).
+2. Set your API key as an environment variable for your chosen provider (see "Prerequisites" above).
+3. Run the application with your selected provider, for example:
+
+   ```bash
+   ./ai-commit --provider openai
+   ```
 
 ## Usage
 
@@ -81,25 +85,25 @@ To generate a commit message:
 
 ```bash
 # Use OpenAI (default)
-go run main.go
+./ai-commit
 
 # Use OpenAI with specific model
-go run main.go --provider openai --model gpt-4
+./ai-commit --provider openai --model gpt-4
 
 # Use Claude
-go run main.go --provider claude --model claude-2
+./ai-commit --provider claude --model claude-2
 
 # Use Mistral
-go run main.go --provider mistral --model mistral-medium
+./ai-commit --provider mistral --model mistral-medium
 
 # Use Gemini
-go run main.go --provider gemini --model gemini-pro
+./ai-commit --provider gemini --model gemini-pro
 
 # Use OpenRouter
-go run main.go --provider openrouter --model optimus-alpha
+./ai-commit --provider openrouter --model optimus-alpha
 
 # Use Local AI (Ollama)
-go run main.go --provider local --model llama2
+./ai-commit --provider local --model llama2
 ```
 
 The program will analyze your current git changes and generate an AI-powered commit message following the conventional commit format:
@@ -121,11 +125,11 @@ OpenRouter provides access to various AI models, including some free ones that d
 
 ```bash
 # Use a free OpenRouter model
-go run main.go --provider openrouter --model openrouter/auto
+./ai-commit --provider openrouter --model openrouter/auto
 
 # Other free tiers may include:
-go run main.go --provider openrouter --model mistralai/mistral-7b-instruct
-go run main.go --provider openrouter --model openchat/openchat-7b
+./ai-commit --provider openrouter --model mistralai/mistral-7b-instruct
+./ai-commit --provider openrouter --model openchat/openchat-7b
 ```
 
 The `openrouter/auto` model will automatically route to the best available free model.
@@ -140,19 +144,5 @@ To use a local Ollama:
 4. Run the tool with:
 
 ```bash
-go run main.go --provider local --model llama2 -endpoint http://localhost:11434
-```
-
-## Build
-
-To build the application:
-
-```bash
-go build -o commit-generator
-```
-
-Then you can run the executable:
-
-```bash
-./commit-generator
+./ai-commit --provider local --model llama2 -endpoint http://localhost:11434
 ```
