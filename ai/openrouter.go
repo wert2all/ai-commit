@@ -4,23 +4,15 @@ import (
 	"github.com/sashabaranov/go-openai"
 )
 
-type (
-	OpenRouterProvider struct {
-		client *openai.Client
-		model  string
-	}
-)
-
-func NewOpenRouterProvider(apiKey string, model string) *OpenRouterProvider {
+func NewOpenRouterProvider(apiKey string, model string) *OpenAIProvider {
 	if model == "" {
-		model = "optimus-alpha" // default model
+		model = "openrouter/optimus-alpha"
 	}
 
 	config := openai.DefaultConfig(apiKey)
 	config.BaseURL = "https://openrouter.ai/api/v1"
 
-	openai.NewClientWithConfig(config)
-	return &OpenRouterProvider{
+	return &OpenAIProvider{
 		client: openai.NewClientWithConfig(config),
 		model:  model,
 	}
