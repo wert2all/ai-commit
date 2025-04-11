@@ -7,7 +7,7 @@ import (
 	"io"
 	"net/http"
 
-	"github.com/wert2all/ai-commit/changes"
+	"github.com/wert2all/ai-commit/project"
 )
 
 type ClaudeProvider struct {
@@ -29,10 +29,10 @@ type claudeResponse struct {
 	Model      string `json:"model"`
 }
 
-func (p *ClaudeProvider) GenerateCommitMessage(projectContext string, changes changes.Changes) (string, error) {
+func (p *ClaudeProvider) GenerateCommitMessage(projectContext project.ProjectContext) (string, error) {
 	req := claudeRequest{
 		Model:       p.model,
-		Prompt:      fmt.Sprintf("\n\nHuman: Project Context:\n\n%s\n\nChanges:\n\n%s\n\nAssistant: %s", projectContext, changes.ToString(), SystemPrompt),
+		Prompt:      fmt.Sprintf("\n\nHuman: Project Context:\n\n%s\n\nAssistant: %s", projectContext.Context, projectContext.SystemPrompt),
 		MaxTokens:   50,
 		Temperature: 0.7,
 		Stop:        []string{"\n", "Human:"},
