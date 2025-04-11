@@ -1,4 +1,4 @@
-package ai
+package openai
 
 import (
 	"context"
@@ -8,26 +8,18 @@ import (
 	"github.com/wert2all/ai-commit/project"
 )
 
-type OpenAIProvider struct {
-	client *openai.Client
-	model  string
-}
-
-func NewOpenAIProvider(apiKey string, model string) *OpenAIProvider {
-	if model == "" {
-		model = openai.GPT3Dot5Turbo
+type (
+	OpenAIProvider struct {
+		Client *openai.Client
+		Model  string
 	}
-	return &OpenAIProvider{
-		client: openai.NewClient(apiKey),
-		model:  model,
-	}
-}
+)
 
 func (p *OpenAIProvider) GenerateCommitMessage(projectContext project.ProjectContext) (string, error) {
-	resp, err := p.client.CreateChatCompletion(
+	resp, err := p.Client.CreateChatCompletion(
 		context.Background(),
 		openai.ChatCompletionRequest{
-			Model: p.model,
+			Model: p.Model,
 			Messages: []openai.ChatCompletionMessage{
 				{
 					Role:    openai.ChatMessageRoleSystem,
@@ -51,4 +43,24 @@ func (p *OpenAIProvider) GenerateCommitMessage(projectContext project.ProjectCon
 	}
 
 	return resp.Choices[0].Message.Content, nil
+}
+
+func NewGPTProvider(apiKey string, model string) *OpenAIProvider {
+	if model == "" {
+		model = openai.GPT3Dot5Turbo
+	}
+	return &OpenAIProvider{
+		Client: openai.NewClient(apiKey),
+		Model:  model,
+	}
+}
+
+func NewOpenAiProvider(baseURL string, apiKey string, model string) *OpenAIProvider {
+	config := openai.DefaultConfig(apiKey)
+	config.BaseURL = baseURL
+
+	return &OpenAIProvider{
+		Client: openai.NewClientWithConfig(config),
+		Model:  model,
+	}
 }

@@ -1,19 +1,10 @@
 package ai
 
-import (
-	"github.com/sashabaranov/go-openai"
-)
+import "github.com/wert2all/ai-commit/ai/openai"
 
-func NewOpenRouterProvider(apiKey string, model string) *OpenAIProvider {
+func NewOpenRouterProvider(apiKey string, model string) *openai.OpenAIProvider {
 	if model == "" {
 		model = "openrouter/optimus-alpha"
 	}
-
-	config := openai.DefaultConfig(apiKey)
-	config.BaseURL = "https://openrouter.ai/api/v1"
-
-	return &OpenAIProvider{
-		client: openai.NewClientWithConfig(config),
-		model:  model,
-	}
+	return openai.NewOpenAiProvider("https://openrouter.ai/api/v1", apiKey, model)
 }
