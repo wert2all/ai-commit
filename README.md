@@ -59,7 +59,7 @@ go run main.go --provider mistral --model mistral-medium
 # Use Gemini
 go run main.go --provider gemini --model gemini-pro
 
-#Use OpenRouter
+# Use OpenRouter
 go run main.go --provider openrouter --model optimus-alpha
 
 # Use Local AI (Ollama)
@@ -82,8 +82,26 @@ For example:
 - Gemini
 - Claude
 - OpenRouter
-- Claude
 - Local Ollama
+
+## OpenRouter Setup
+
+OpenRouter provides access to various AI models, including some free ones that don't require billing information:
+
+1. Sign up at [OpenRouter](https://openrouter.ai)
+2. Navigate to your account settings to generate an API key
+3. To use a free model, specify one of the available free models:
+
+```bash
+# Use a free OpenRouter model
+go run main.go --provider openrouter --model openrouter/auto
+
+# Other free tiers may include:
+go run main.go --provider openrouter --model mistralai/mistral-7b-instruct
+go run main.go --provider openrouter --model openchat/openchat-7b
+```
+
+The `openrouter/auto` model will automatically route to the best available free model.
 
 ## Local AI Provider Setup
 
@@ -119,7 +137,7 @@ Then you can run the executable:
   - Claude (claude-2, claude-instant-1)
   - Mistral AI (mistral-medium, mistral-small, mistral-tiny)
   - Google Gemini (gemini-pro, gemini-pro-vision)
-  - OpenRouter
+  - OpenRouter (with access to free and paid models)
   - **Local AI (Ollama)**
 - Analyzes your actual git changes to generate contextual commit messages
 - Considers staged changes
