@@ -156,6 +156,15 @@ func (c contextBuilderImpl) Build() (*ProjectContext, error) {
 	if c.changes != nil {
 		context.WriteString("\n=== Changes ===\n")
 		context.Write(c.changes.Diff())
+
+		context.WriteString("\n=== Changed files content ===\n")
+
+		changedFiles := c.changes.ChangedFiles()
+		for _, file := range changedFiles {
+			content := readFileContent(file)
+			context.WriteString("\n== " + file + " ==\n")
+			context.WriteString(content)
+		}
 	}
 
 	return &ProjectContext{
@@ -164,7 +173,6 @@ func (c contextBuilderImpl) Build() (*ProjectContext, error) {
 	}, nil
 }
 
-// nolint
 func readFileContent(path string) string {
 	content, err := os.ReadFile(path)
 	if err != nil {
