@@ -38,6 +38,8 @@ A Go application that generates contextual conventional commit messages using AI
 |                        |                                                                              |
 | `--without-commit`     | Generate a commit message without committing changes                         |
 | `--with-files-content` | Append content of changes files to context                                   |
+|                        |                                                                              |
+| `--version`            | Show application version                                                     |
 
 ## Prerequisites
 
