@@ -30,13 +30,14 @@ A Go application that generates contextual conventional commit messages using AI
 
 ## Options
 
-| Option             | Description                                                                  |
-| ------------------ | ---------------------------------------------------------------------------- |
-| `--provider`       | Specify the AI provider (openai, claude, mistral, gemini, openrouter, local) |
-| `--model`          | Specify the model to use with the selected provider                          |
-| `--endpoint`       | Custom API endpoint URL (useful for local deployments)                       |
-|                    |                                                                              |
-| `--without-commit` | Generate a commit message without committing changes                         |
+| Option                 | Description                                                                  |
+| ---------------------- | ---------------------------------------------------------------------------- |
+| `--provider`           | Specify the AI provider (openai, claude, mistral, gemini, openrouter, local) |
+| `--model`              | Specify the model to use with the selected provider                          |
+| `--endpoint`           | Custom API endpoint URL (useful for local deployments)                       |
+|                        |                                                                              |
+| `--without-commit`     | Generate a commit message without committing changes                         |
+| `--with-files-content` | Append content of changes files to context                                   |
 
 ## Prerequisites
 

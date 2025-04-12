@@ -61,23 +61,25 @@ type (
 	}
 
 	ContextBuilder interface {
-		AddChanges() ContextBuilder
-		AddLanguages() ContextBuilder
-		AddGitBranch() ContextBuilder
+		AddChanges()
+		AddLanguages()
+		AddGitBranch()
+		AddChangedFilesContent()
 
 		Build() (*ProjectContext, error)
 	}
 	contextBuilderImpl struct {
-		files     []string
-		errors    []error
-		changes   changes.Changes
-		languages []string
-		branch    *string
+		files               []string
+		errors              []error
+		changes             changes.Changes
+		changedFilesContent map[string]string
+		languages           []string
+		branch              *string
 	}
 )
 
 // AddGitBranch implements ContextBuilder.
-func (c contextBuilderImpl) AddGitBranch() ContextBuilder {
+func (c *contextBuilderImpl) AddGitBranch() {
 	// Get git branch info
 	branchCmd := exec.Command("git", "branch", "--show-current")
 	branchOut, err := branchCmd.Output()
@@ -86,11 +88,10 @@ func (c contextBuilderImpl) AddGitBranch() ContextBuilder {
 	}
 	branchString := string(branchOut[:])
 	c.branch = &branchString
-	return c
 }
 
 // AddLanguages implements ContextBuilder.
-func (c contextBuilderImpl) AddLanguages() ContextBuilder {
+func (c *contextBuilderImpl) AddLanguages() {
 	languages := make(map[string]bool)
 
 	for _, file := range c.files {
@@ -115,22 +116,19 @@ func (c contextBuilderImpl) AddLanguages() ContextBuilder {
 	for lang := range languages {
 		c.languages = append(c.languages, lang)
 	}
-
-	return c
 }
 
 // AddChanges implements ContextBuilder.
-func (c contextBuilderImpl) AddChanges() ContextBuilder {
+func (c *contextBuilderImpl) AddChanges() {
 	changes, err := changes.NewChanges()
 	if err != nil {
 		c.errors = append(c.errors, err)
 	}
 	c.changes = changes
-	return c
 }
 
 // Build implements ContextBuilder.
-func (c contextBuilderImpl) Build() (*ProjectContext, error) {
+func (c *contextBuilderImpl) Build() (*ProjectContext, error) {
 	if len(c.errors) != 0 {
 		return nil, c.errors[0]
 	}
@@ -157,12 +155,13 @@ func (c contextBuilderImpl) Build() (*ProjectContext, error) {
 		context.WriteString("\n=== Changes ===\n")
 		context.Write(c.changes.Diff())
 
-		context.WriteString("\n=== Changed files content ===\n")
+	}
 
-		changedFiles := c.changes.ChangedFiles()
-		for _, file := range changedFiles {
-			content := readFileContent(file)
-			context.WriteString("\n== " + file + " ==\n")
+	if len(c.changedFilesContent) > 0 {
+		context.WriteString("\n=== Changed files content ===\n")
+		for filename, content := range c.changedFilesContent {
+			fileHeader := fmt.Sprintf("\n== Filename: %s ==\n", filename)
+			context.WriteString(fileHeader)
 			context.WriteString(content)
 		}
 	}
@@ -207,6 +206,14 @@ func getProjectConfig(repoRoot string, files []string) map[string]string {
 	return config
 }
 
+func (c *contextBuilderImpl) AddChangedFilesContent() {
+	changedFiles := c.changes.ChangedFiles()
+	c.changedFilesContent = make(map[string]string, 0)
+	for _, file := range changedFiles {
+		c.changedFilesContent[file] = readFileContent(file)
+	}
+}
+
 func NewBuilder(projectDir string) (ContextBuilder, error) {
 	// Use provided project directory as repository root
 	repoRoot := projectDir
@@ -227,10 +234,12 @@ func NewBuilder(projectDir string) (ContextBuilder, error) {
 		}
 	}
 
-	return contextBuilderImpl{
-		errors:    make([]error, 0),
-		files:     files,
-		languages: make([]string, 0),
-		branch:    nil,
+	return &contextBuilderImpl{
+		errors:              make([]error, 0),
+		files:               files,
+		languages:           make([]string, 0),
+		branch:              nil,
+		changes:             nil,
+		changedFilesContent: map[string]string{},
 	}, nil
 }
