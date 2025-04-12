@@ -10,12 +10,20 @@ import (
 	"github.com/wert2all/ai-commit/ui"
 )
 
-var cardWidth = 60
+var (
+	cardWidth = 60
+	Version   = "dev"
+)
 
 func main() {
 	config, err := ai.ReadConfig()
 	if err != nil {
 		handleError(err)
+	}
+
+	if config.Options.ShowVersion {
+		fmt.Printf("Version: %s\n", Version)
+		os.Exit(0)
 	}
 
 	provider, err := ai.NewProvider(*config)

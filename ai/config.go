@@ -10,6 +10,7 @@ import (
 type Options struct {
 	WithCommit              bool
 	WithChangedFilesContent bool
+	ShowVersion             bool
 }
 
 type Config struct {
@@ -28,6 +29,7 @@ func ReadConfig() (*Config, error) {
 	endpoint := flag.String("endpoint", "", "Local provider endpoint1")
 	withoutCommit := flag.Bool("without-commit", false, "commit a source after generate")
 	withFilesContent := flag.Bool("with-files-content", false, "include content of changed files to context")
+	showVersion := flag.Bool("version", false, "show version")
 
 	flag.Parse()
 
@@ -51,6 +53,7 @@ func ReadConfig() (*Config, error) {
 		Options: Options{
 			WithCommit:              !*withoutCommit,
 			WithChangedFilesContent: *withFilesContent,
+			ShowVersion:             *showVersion,
 		},
 	}
 	return &config, nil
