@@ -1,5 +1,21 @@
 # Changelog
 
+## [1.4.0](https://github.com/wert2all/ai-commit/compare/v1.3.0...v1.4.0) (2025-04-12)
+
+
+### Features
+
+* add method to retrieve content of changed files and add it to ([0519ad1](https://github.com/wert2all/ai-commit/commit/0519ad1798a01b367c51d466ae01dcc472236350))
+* add OpenRoute support ([97a87ae](https://github.com/wert2all/ai-commit/commit/97a87ae9d83c6ff40d24690914b7bb5e5cea65d9))
+* **ai:** update default models ([a4ff65a](https://github.com/wert2all/ai-commit/commit/a4ff65a66beeeff61b7c02e19b6740a8c68f4be4))
+* **config:** add `--version` option and display version ([c013e77](https://github.com/wert2all/ai-commit/commit/c013e77608641e91dda3ef92ed60f08c0d76356e))
+* **project:** add option to include changed files content in context generation ([b6d4fd6](https://github.com/wert2all/ai-commit/commit/b6d4fd6ad8b37e1e059cae2f79d7a152a2bac8e5))
+
+
+### Bug Fixes
+
+* update system prompt ([12977b8](https://github.com/wert2all/ai-commit/commit/12977b8487405094807e878ab5ac1e97dc25d2b7))
+
 ## [1.3.0](https://github.com/wert2all/ai-commit/compare/v1.2.0...v1.3.0) (2025-04-11)
 
 
