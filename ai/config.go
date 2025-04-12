@@ -22,7 +22,7 @@ type Config struct {
 }
 
 func ReadConfig() (*Config, error) {
-	providerName := flag.String("provider", "openai", "AI provider to use (openai, claude, mistral, gemini, local)")
+	providerName := flag.String("provider", "openai", "AI provider to use (openai, claude, mistral, gemini, openrouter, local)")
 	model := flag.String("model", "", "Model to use (e.g., gpt-3.5-turbo, claude-2, mistral-medium, gemini-pro)")
 	projectDir := flag.String("dir", ".", "Project directory path")
 	endpoint := flag.String("endpoint", "", "Local provider endpoint1")
