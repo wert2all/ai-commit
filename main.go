@@ -28,11 +28,15 @@ func main() {
 		handleError(err)
 	}
 
-	projectContext, err := contextBuilder.
-		AddLanguages().
-		AddChanges().
-		AddGitBranch().
-		Build()
+	contextBuilder.AddLanguages()
+	contextBuilder.AddGitBranch()
+	contextBuilder.AddChanges()
+
+	if config.Options.WithChangedFilesContent {
+		contextBuilder.AddChangedFilesContent()
+	}
+
+	projectContext, err := contextBuilder.Build()
 	if err != nil {
 		handleError(err)
 	}
