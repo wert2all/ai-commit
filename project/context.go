@@ -228,7 +228,7 @@ func NewBuilder(projectDir string) (ContextBuilder, error) {
 
 	// Split output into lines and filter empty lines
 	files := make([]string, 0)
-	for _, file := range strings.Split(string(filesOut), "\n") {
+	for file := range strings.SplitSeq(string(filesOut), "\n") {
 		if file = strings.TrimSpace(file); file != "" {
 			files = append(files, file)
 		}
