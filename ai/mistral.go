@@ -15,6 +15,11 @@ type MistralProvider struct {
 	model  string
 }
 
+// GetProviderInfo implements Provider.
+func (p *MistralProvider) GetProviderInfo() ProviderInfo {
+	return ProviderInfo{Name: "Mistral AI", Model: p.model}
+}
+
 type mistralRequest struct {
 	Model       string    `json:"model"`
 	Messages    []message `json:"messages"`
