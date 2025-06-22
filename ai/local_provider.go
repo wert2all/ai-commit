@@ -16,6 +16,11 @@ type LocalProvider struct {
 	endpoint string
 }
 
+// GetProviderInfo implements Provider.
+func (p *LocalProvider) GetProviderInfo() ProviderInfo {
+	return ProviderInfo{Name: "Local LLM", Model: p.model}
+}
+
 func NewLocalProvider(endpoint string, model string) *LocalProvider {
 	return &LocalProvider{
 		model:    model,

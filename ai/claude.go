@@ -15,6 +15,11 @@ type ClaudeProvider struct {
 	model  string
 }
 
+// GetProviderInfo implements Provider.
+func (p *ClaudeProvider) GetProviderInfo() ProviderInfo {
+	return ProviderInfo{Name: "Anthropic Claude", Model: p.model}
+}
+
 type claudeRequest struct {
 	Model       string   `json:"model"`
 	Prompt      string   `json:"prompt"`

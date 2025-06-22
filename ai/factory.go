@@ -8,8 +8,13 @@ import (
 
 type (
 	ProviderType string
-	Provider     interface {
+	ProviderInfo struct {
+		Name  string
+		Model string
+	}
+	Provider interface {
 		GenerateCommitMessage(projectContext project.ProjectContext) (string, error)
+		GetProviderInfo() ProviderInfo
 	}
 )
 

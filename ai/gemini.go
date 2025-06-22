@@ -15,6 +15,11 @@ type GeminiProvider struct {
 	model  string
 }
 
+// GetProviderInfo implements Provider.
+func (p *GeminiProvider) GetProviderInfo() ProviderInfo {
+	return ProviderInfo{Name: "Google Gemini", Model: p.model}
+}
+
 type geminiRequest struct {
 	Contents         []content        `json:"contents"`
 	GenerationConfig generationConfig `json:"generationConfig"`
