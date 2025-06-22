@@ -45,16 +45,6 @@ func (p *OpenAIProvider) GenerateCommitMessage(projectContext project.ProjectCon
 	return resp.Choices[0].Message.Content, nil
 }
 
-func NewGPTProvider(apiKey string, model string) *OpenAIProvider {
-	if model == "" {
-		model = openai.GPT3Dot5Turbo
-	}
-	return &OpenAIProvider{
-		Client: openai.NewClient(apiKey),
-		Model:  model,
-	}
-}
-
 func NewOpenAiProvider(baseURL string, apiKey string, model string) *OpenAIProvider {
 	config := openai.DefaultConfig(apiKey)
 	config.BaseURL = baseURL

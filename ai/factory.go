@@ -3,7 +3,6 @@ package ai
 import (
 	"fmt"
 
-	"github.com/wert2all/ai-commit/ai/openai"
 	"github.com/wert2all/ai-commit/project"
 )
 
@@ -28,7 +27,7 @@ func NewProvider(config Config) (Provider, error) {
 	case ProviderMistral:
 		return NewMistralProvider(config.APIKey, config.Model), nil
 	case ProviderOpenAI:
-		return openai.NewGPTProvider(config.APIKey, config.Model), nil
+		return NewGPTProvider(config.APIKey, config.Model), nil
 	case ProviderClaude:
 		return NewClaudeProvider(config.APIKey, config.Model), nil
 	case ProviderGemini:
