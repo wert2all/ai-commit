@@ -1,7 +1,10 @@
 package ui
 
 import (
+	"strings"
+
 	"github.com/charmbracelet/lipgloss"
+	"github.com/wert2all/ai-commit/ai"
 )
 
 var (
@@ -20,3 +23,13 @@ var (
 
 	contentStyle = lipgloss.NewStyle().Padding(1, 2)
 )
+
+func NewProviderInfo(providerInfo ai.ProviderInfo) string {
+	var fullResponse strings.Builder
+
+	fullResponse.WriteString("\nUsing ")
+	fullResponse.WriteString(providerInfo.Name)
+	fullResponse.WriteString(" with ")
+	fullResponse.WriteString(providerInfo.Model)
+	return fullResponse.String()
+}
