@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.5.0](https://github.com/wert2all/ai-commit/compare/v1.4.0...v1.5.0) (2025-06-22)
+
+
+### Features
+
+* **ui:** add provider info display in main ([7b77827](https://github.com/wert2all/ai-commit/commit/7b7782724d0053f9a0e387947115d49d49b5cab4))
+
 ## [1.4.0](https://github.com/wert2all/ai-commit/compare/v1.3.0...v1.4.0) (2025-04-12)
 
 
