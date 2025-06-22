@@ -54,6 +54,7 @@ func main() {
 		handleError(err)
 	}
 
+	fmt.Println(ui.NewProviderInfo(provider.GetProviderInfo()))
 	fmt.Println(ui.NewCard("Commit message", commitMsg, cardWidth))
 
 	if config.Options.WithCommit {
