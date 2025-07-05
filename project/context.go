@@ -110,6 +110,8 @@ func (c *contextBuilderImpl) AddLanguages() {
 			languages["Ruby"] = true
 		case strings.HasSuffix(file, ".rs"):
 			languages["Rust"] = true
+		case strings.HasSuffix(file, ".kt"):
+			languages["Kotlin"] = true
 		}
 	}
 

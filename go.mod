@@ -4,7 +4,7 @@ go 1.24.4
 
 require (
 	github.com/charmbracelet/lipgloss v1.1.0
-	github.com/sashabaranov/go-openai v1.40.2
+	github.com/sashabaranov/go-openai v1.40.3
 )
 
 require (
