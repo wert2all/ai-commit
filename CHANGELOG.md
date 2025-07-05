@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.5.1](https://github.com/wert2all/ai-commit/compare/v1.5.0...v1.5.1) (2025-07-05)
+
+
+### Bug Fixes
+
+* **project:** add Kotlin language detection ([ca4ed3b](https://github.com/wert2all/ai-commit/commit/ca4ed3b2702bf1e070c0ff340dfc373707ddc636))
+
 ## [1.5.0](https://github.com/wert2all/ai-commit/compare/v1.4.0...v1.5.0) (2025-06-22)
 
 
